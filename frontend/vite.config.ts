@@ -5,7 +5,7 @@ export default defineConfig({
     lib: {
       entry: 'src/index.ts',
       formats: ['es'],
-      fileName: () => 'plant-analyzer-panel',
+      fileName: () => 'plant-analyzer-panel.js',
     },
     rollupOptions: {
       output: {
