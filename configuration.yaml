@@ -1,0 +1,25 @@
+mqtt:
+  sensor:
+    - name: "Plant Moisture"
+      unique_id: "plant_moisture"
+      state_topic: "pflanzen/esp32"
+      value_template: "{{ (value_json.sensoren | selectattr('kanal', 'equalto', 0) | first).feuchtigkeit_pct }}"
+      unit_of_measurement: "%"
+      state_class: "measurement"
+      device_class: moisture
+
+    - name: "Moisture Calathea"
+      unique_id: "plant_moisture_calathea"
+      state_topic: "pflanzen/esp32"
+      value_template: "{{ (value_json.sensoren | selectattr('kanal', 'equalto', 1) | first).feuchtigkeit_pct }}"
+      unit_of_measurement: "%"
+      state_class: "measurement"
+      device_class: moisture
+
+    - name: "light sensor"
+      unique_id: "plant_light"
+      state_topic: "pflanzen/esp32"
+      value_template: "{{ value_json.licht_lx }}"
+      unit_of_measurement: "lx"
+      state_class: "measurement"
+      device_class: illuminance
