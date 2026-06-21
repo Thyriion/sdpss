@@ -1,0 +1,10 @@
+{
+  "domain": "plant_manager",
+  "name": "Plant Manager",
+  "version": "0.1.0",
+  "documentation": "https://github.com/Thyriion/sdpss",
+  "codeowners": [],
+  "requirements": [],
+  "iot_class": "local_push",
+  "config_flow": true
+}

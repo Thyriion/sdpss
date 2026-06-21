@@ -1,0 +1,18 @@
+log_watering:
+  name: Gießen protokollieren
+  description: Protokolliert einen Gießvorgang für eine Pflanze.
+  fields:
+    entity_id:
+      name: Pflanze
+      description: Die Plant-Entity, die gegossen wurde.
+      required: true
+      selector:
+        entity:
+          domain: plant
+    notes:
+      name: Notizen
+      description: Optionale Notizen zum Gießvorgang.
+      required: false
+      default: ""
+      selector:
+        text:
