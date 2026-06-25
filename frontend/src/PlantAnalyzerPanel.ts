@@ -97,6 +97,6 @@ export class PlantAnalyzerPanel extends HTMLElement {
   private _updateDetail(): void {
     const plant = this._hass?.states[this._selectedPlantId!];
     if (!plant) return;
-    updateDetail(this, plant);
+    updateDetail(this, plant, this._hass!.states);
   }
 }

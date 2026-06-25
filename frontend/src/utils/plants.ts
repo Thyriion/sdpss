@@ -1,5 +1,34 @@
-import { PlantAttributes, PlantProblem } from '../types';
+import { PlantAttributes, PlantProblem, HassEntity } from '../types';
 import { fmt } from './format';
+
+/**
+ * Reads a plant sensor value independent of problems[].
+ * Priority: problems[].current → direct attribute → sensor entity via sensors dict
+ */
+export function getPlantSensorValue(
+  type: string,
+  attrs: Record<string, unknown>,
+  states: Record<string, HassEntity>,
+  problems: PlantProblem[] = []
+): number | null {
+  // 1. from problems[].current (reliable when a problem exists)
+  const fromProblem = problems.find(p => p.sensor_type === type)?.current;
+  if (typeof fromProblem === 'number' && !isNaN(fromProblem)) return fromProblem;
+
+  // 2. direct attribute (some integration versions set this)
+  const direct = attrs[type];
+  if (typeof direct === 'number' && !isNaN(direct)) return direct;
+
+  // 3. via sensors dict: { moisture: "sensor.foo", illuminance: "sensor.bar" }
+  const sensors = attrs['sensors'] as Record<string, string> | undefined;
+  const entityId = sensors?.[type];
+  if (entityId) {
+    const val = parseFloat(states[entityId]?.state ?? '');
+    if (!isNaN(val)) return val;
+  }
+
+  return null;
+}
 
 export function getProblems(attrs: PlantAttributes): PlantProblem[] {
   return Array.isArray(attrs.problems) ? attrs.problems : [];

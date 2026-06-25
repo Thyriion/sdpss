@@ -468,6 +468,83 @@ const DETAIL_STYLES = `<style>
     .layout { grid-template-columns: 1fr; }
   }
 </style>`;
+const STATUS_MAP = {
+  Low: "Zu niedrig",
+  High: "Zu hoch",
+  Ok: "Okay",
+  OK: "Okay",
+  ok: "Okay",
+  Normal: "Okay"
+};
+function fmt(value) {
+  const n = Number(value);
+  if (Number.isNaN(n)) return String(value);
+  return n.toLocaleString("de-DE", { maximumFractionDigits: 1 });
+}
+function translateStatus(status) {
+  if (!status) return "Unbekannt";
+  return STATUS_MAP[status] ?? status;
+}
+function statusCls(status) {
+  if (!status) return "warning";
+  return status === "Low" || status === "High" ? "problem" : "ok";
+}
+function getPlantSensorValue(type, attrs, states, problems = []) {
+  var _a, _b;
+  const fromProblem = (_a = problems.find((p) => p.sensor_type === type)) == null ? void 0 : _a.current;
+  if (typeof fromProblem === "number" && !isNaN(fromProblem)) return fromProblem;
+  const direct = attrs[type];
+  if (typeof direct === "number" && !isNaN(direct)) return direct;
+  const sensors = attrs["sensors"];
+  const entityId = sensors == null ? void 0 : sensors[type];
+  if (entityId) {
+    const val = parseFloat(((_b = states[entityId]) == null ? void 0 : _b.state) ?? "");
+    if (!isNaN(val)) return val;
+  }
+  return null;
+}
+function getProblems(attrs) {
+  return Array.isArray(attrs.problems) ? attrs.problems : [];
+}
+function problemByType(problems, type) {
+  return problems.find((p) => p.sensor_type === type) ?? null;
+}
+function statusLabel(problems) {
+  if (!problems.length) return "Alles okay";
+  return problems.length === 1 ? "1 Problem" : `${problems.length} Probleme`;
+}
+function getRecommendation(problems, attrs) {
+  if (!problems.length) {
+    return "Aktuell sind keine Probleme erkannt. Die Pflanze liegt im Zielbereich.";
+  }
+  const name = attrs.friendly_name ?? "Die Pflanze";
+  const moisture = problemByType(problems, "moisture");
+  if ((moisture == null ? void 0 : moisture.current) !== void 0 && moisture.min !== void 0 && moisture.max !== void 0) {
+    const c = fmt(moisture.current);
+    const min = fmt(moisture.min);
+    const max = fmt(moisture.max);
+    if (moisture.status === "Low") {
+      return `Die Bodenfeuchte ist zu niedrig: aktuell ${c} %, Zielbereich ${min}–${max} %. Gieße ${name} vorsichtig und prüfe später erneut.`;
+    }
+    if (moisture.status === "High") {
+      return `Die Bodenfeuchte ist zu hoch: aktuell ${c} %, Zielbereich ${min}–${max} %. Nicht weiter gießen, Staunässe vermeiden.`;
+    }
+  }
+  const light = problemByType(problems, "illuminance") ?? problemByType(problems, "brightness");
+  if ((light == null ? void 0 : light.current) !== void 0 && light.min !== void 0 && light.max !== void 0) {
+    const c = fmt(light.current);
+    const min = fmt(light.min);
+    const max = fmt(light.max);
+    if (light.status === "Low") {
+      return `Die Beleuchtung ist zu niedrig: aktuell ${c} lx, Zielbereich ${min}–${max} lx. Pflanze an einen helleren Standort stellen.`;
+    }
+    if (light.status === "High") {
+      return `Die Beleuchtung ist zu hoch: aktuell ${c} lx, Zielbereich ${min}–${max} lx. Direkte Sonneneinstrahlung reduzieren.`;
+    }
+  }
+  const types = problems.map((p) => p.sensor_type ?? "").filter(Boolean).join(", ");
+  return `Probleme erkannt: ${types}.`;
+}
 const DEFAULT_ENTITIES = {
   light: "sensor.greenhouse_esp32_bh1750_illuminance",
   temperature: "sensor.greenhouse_esp32_bme280_temperature",
@@ -608,7 +685,7 @@ function updateDashboard(root, plants, states, entities = DEFAULT_ENTITIES, tank
     setText$1(root, "gh-hum", `${Math.round(parseFloat(humEnt.state))} %`);
   }
   setText$1(root, "gh-plants", String(plants.length));
-  buildPlantList(root, plants);
+  buildPlantList(root, plants, states);
   const tankEnt = states[entities.rainTank];
   if (tankEnt && tankEnt.state !== "unavailable") {
     const liters = Math.round(parseFloat(tankEnt.state));
@@ -630,14 +707,15 @@ function updateDashboard(root, plants, states, entities = DEFAULT_ENTITIES, tank
     setText$1(root, "b-action-d", parts[1] ?? "");
   }
 }
-function buildPlantList(root, plants) {
+function buildPlantList(root, plants, states) {
   const list = root.querySelector("#plant-list");
   if (!list) return;
   list.innerHTML = plants.map((p) => {
     const a = p.attributes;
     const name = a["friendly_name"] ?? p.entity_id;
     const species = a["species"] ?? "";
-    const moisture = a["moisture"];
+    const problems = Array.isArray(a["problems"]) ? a["problems"] : [];
+    const moisture = getPlantSensorValue("moisture", a, states, problems);
     const moistureStatus = a["moisture_status"];
     const cls = moisture != null ? moisture < 20 ? "problem" : moisture < 30 ? "warning" : "ok" : moistureStatus === "Low" ? "problem" : moistureStatus === "High" ? "warning" : "ok";
     const pct = moisture != null ? Math.min(100, Math.max(0, Math.round(moisture))) : null;
@@ -691,69 +769,6 @@ function setHtml(root, id, val) {
 function setDot(root, id, cls, label) {
   const el = root.querySelector(`#${id}`);
   if (el) el.innerHTML = `<span class="dot ${cls}"></span>${label}`;
-}
-const STATUS_MAP = {
-  Low: "Zu niedrig",
-  High: "Zu hoch",
-  Ok: "Okay",
-  OK: "Okay",
-  ok: "Okay",
-  Normal: "Okay"
-};
-function fmt(value) {
-  const n = Number(value);
-  if (Number.isNaN(n)) return String(value);
-  return n.toLocaleString("de-DE", { maximumFractionDigits: 1 });
-}
-function translateStatus(status) {
-  if (!status) return "Unbekannt";
-  return STATUS_MAP[status] ?? status;
-}
-function statusCls(status) {
-  if (!status) return "warning";
-  return status === "Low" || status === "High" ? "problem" : "ok";
-}
-function getProblems(attrs) {
-  return Array.isArray(attrs.problems) ? attrs.problems : [];
-}
-function problemByType(problems, type) {
-  return problems.find((p) => p.sensor_type === type) ?? null;
-}
-function statusLabel(problems) {
-  if (!problems.length) return "Alles okay";
-  return problems.length === 1 ? "1 Problem" : `${problems.length} Probleme`;
-}
-function getRecommendation(problems, attrs) {
-  if (!problems.length) {
-    return "Aktuell sind keine Probleme erkannt. Die Pflanze liegt im Zielbereich.";
-  }
-  const name = attrs.friendly_name ?? "Die Pflanze";
-  const moisture = problemByType(problems, "moisture");
-  if ((moisture == null ? void 0 : moisture.current) !== void 0 && moisture.min !== void 0 && moisture.max !== void 0) {
-    const c = fmt(moisture.current);
-    const min = fmt(moisture.min);
-    const max = fmt(moisture.max);
-    if (moisture.status === "Low") {
-      return `Die Bodenfeuchte ist zu niedrig: aktuell ${c} %, Zielbereich ${min}–${max} %. Gieße ${name} vorsichtig und prüfe später erneut.`;
-    }
-    if (moisture.status === "High") {
-      return `Die Bodenfeuchte ist zu hoch: aktuell ${c} %, Zielbereich ${min}–${max} %. Nicht weiter gießen, Staunässe vermeiden.`;
-    }
-  }
-  const light = problemByType(problems, "illuminance") ?? problemByType(problems, "brightness");
-  if ((light == null ? void 0 : light.current) !== void 0 && light.min !== void 0 && light.max !== void 0) {
-    const c = fmt(light.current);
-    const min = fmt(light.min);
-    const max = fmt(light.max);
-    if (light.status === "Low") {
-      return `Die Beleuchtung ist zu niedrig: aktuell ${c} lx, Zielbereich ${min}–${max} lx. Pflanze an einen helleren Standort stellen.`;
-    }
-    if (light.status === "High") {
-      return `Die Beleuchtung ist zu hoch: aktuell ${c} lx, Zielbereich ${min}–${max} lx. Direkte Sonneneinstrahlung reduzieren.`;
-    }
-  }
-  const types = problems.map((p) => p.sensor_type ?? "").filter(Boolean).join(", ");
-  return `Probleme erkannt: ${types}.`;
 }
 function buildDetailHTML() {
   return `${DETAIL_STYLES}
@@ -810,20 +825,18 @@ function buildDetailHTML() {
       </div>
     </div>`;
 }
-function updateDetail(root, plant) {
+function updateDetail(root, plant, states) {
   const a = plant.attributes;
   const problems = getProblems(a);
-  const moisture = problemByType(problems, "moisture");
-  const light = problemByType(problems, "illuminance") ?? problemByType(problems, "brightness");
   setText(root, "plant-name", a.friendly_name ?? "Unbekannte Pflanze");
   setText(root, "plant-species", a.species ?? "");
   setText(root, "plant-status", statusLabel(problems));
   setCls(root, "plant-status", problems.length ? "problem" : "ok");
-  const moistureVal = (moisture == null ? void 0 : moisture.current) ?? a.moisture ?? null;
+  const moistureVal = getPlantSensorValue("moisture", plant.attributes, states, problems);
   setText(root, "moisture-value", moistureVal != null ? `${fmt(moistureVal)} %` : "–");
   setText(root, "moisture-status", translateStatus(a.moisture_status));
   setCls(root, "moisture-status", statusCls(a.moisture_status));
-  const lightVal = (light == null ? void 0 : light.current) ?? a.illuminance ?? a.brightness ?? null;
+  const lightVal = getPlantSensorValue("illuminance", plant.attributes, states, problems) ?? getPlantSensorValue("brightness", plant.attributes, states, problems);
   setText(root, "light-value", lightVal != null ? `${fmt(lightVal)} lx` : "–");
   const lightStatus = a.illuminance_status ?? a.brightness_status ?? null;
   setText(root, "light-status", translateStatus(lightStatus));
@@ -937,7 +950,7 @@ class PlantAnalyzerPanel extends HTMLElement {
     var _a;
     const plant = (_a = this._hass) == null ? void 0 : _a.states[this._selectedPlantId];
     if (!plant) return;
-    updateDetail(this, plant);
+    updateDetail(this, plant, this._hass.states);
   }
 }
 customElements.define("plant-analyzer-panel", PlantAnalyzerPanel);

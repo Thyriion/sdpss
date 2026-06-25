@@ -1,5 +1,6 @@
 import { HassEntity, EntityConfig } from '../types';
 import { STYLES } from '../styles';
+import { getPlantSensorValue } from '../utils/plants';
 
 export const DEFAULT_ENTITIES: Required<EntityConfig> = {
   light:        'sensor.greenhouse_esp32_bh1750_illuminance',
@@ -164,7 +165,7 @@ export function updateDashboard(
   setText(root, 'gh-plants', String(plants.length));
 
   // Plant list
-  buildPlantList(root, plants);
+  buildPlantList(root, plants, states);
 
   // Rain tank
   const tankEnt = states[entities.rainTank];
@@ -193,7 +194,7 @@ export function updateDashboard(
   }
 }
 
-function buildPlantList(root: HTMLElement, plants: HassEntity[]): void {
+function buildPlantList(root: HTMLElement, plants: HassEntity[], states: Record<string, HassEntity>): void {
   const list = root.querySelector('#plant-list');
   if (!list) return;
 
@@ -201,7 +202,8 @@ function buildPlantList(root: HTMLElement, plants: HassEntity[]): void {
     const a = p.attributes;
     const name = (a['friendly_name'] as string) ?? p.entity_id;
     const species = (a['species'] as string) ?? '';
-    const moisture = a['moisture'] as number | undefined;
+    const problems = Array.isArray(a['problems']) ? a['problems'] as { sensor_type?: string; current?: number }[] : [];
+    const moisture = getPlantSensorValue('moisture', a, states, problems);
     const moistureStatus = a['moisture_status'] as string | undefined;
 
     const cls = moisture != null

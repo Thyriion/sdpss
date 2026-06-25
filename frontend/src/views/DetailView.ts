@@ -1,6 +1,6 @@
 import { HassEntity, PlantAttributes } from '../types';
 import { fmt, translateStatus, statusCls } from '../utils/format';
-import { getProblems, problemByType, statusLabel, getRecommendation } from '../utils/plants';
+import { getProblems, problemByType, statusLabel, getRecommendation, getPlantSensorValue } from '../utils/plants';
 import { DETAIL_STYLES as STYLES } from '../styles';
 
 export function buildDetailHTML(): string {
@@ -59,24 +59,27 @@ export function buildDetailHTML(): string {
     </div>`;
 }
 
-export function updateDetail(root: HTMLElement, plant: HassEntity): void {
+export function updateDetail(
+  root: HTMLElement,
+  plant: HassEntity,
+  states: Record<string, HassEntity>
+): void {
   const a = plant.attributes as PlantAttributes;
   const problems = getProblems(a);
-  const moisture = problemByType(problems, 'moisture');
-  const light =
-    problemByType(problems, 'illuminance') ?? problemByType(problems, 'brightness');
 
   setText(root, 'plant-name', a.friendly_name ?? 'Unbekannte Pflanze');
   setText(root, 'plant-species', a.species ?? '');
   setText(root, 'plant-status', statusLabel(problems));
   setCls(root, 'plant-status', problems.length ? 'problem' : 'ok');
 
-  const moistureVal = moisture?.current ?? a.moisture ?? null;
+  const moistureVal = getPlantSensorValue('moisture', plant.attributes, states, problems);
   setText(root, 'moisture-value', moistureVal != null ? `${fmt(moistureVal)} %` : '–');
   setText(root, 'moisture-status', translateStatus(a.moisture_status));
   setCls(root, 'moisture-status', statusCls(a.moisture_status));
 
-  const lightVal = light?.current ?? a.illuminance ?? a.brightness ?? null;
+  const lightVal =
+    getPlantSensorValue('illuminance', plant.attributes, states, problems) ??
+    getPlantSensorValue('brightness', plant.attributes, states, problems);
   setText(root, 'light-value', lightVal != null ? `${fmt(lightVal)} lx` : '–');
   const lightStatus = a.illuminance_status ?? a.brightness_status ?? null;
   setText(root, 'light-status', translateStatus(lightStatus));
