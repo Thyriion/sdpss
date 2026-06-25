@@ -5,7 +5,7 @@ export const STYLES = `<style>
     padding: 20px 24px;
     min-height: 100vh;
     background: transparent;
-    color: #e8eaf6;
+    color: var(--primary-text-color, #e8eaf6);
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     display: flex;
     flex-direction: column;
@@ -27,19 +27,19 @@ export const STYLES = `<style>
   }
 
   .header-star {
-    color: #0b9e9e;
+    color: var(--primary-color, #0b9e9e);
     font-size: 22px;
   }
 
   .header-title {
     font-size: 22px;
     font-weight: 700;
-    color: #e8eaf6;
+    color: var(--primary-text-color, #e8eaf6);
   }
 
   .header-date {
     font-size: 13px;
-    color: #7a8aaa;
+    color: var(--secondary-text-color, #7a8aaa);
     margin-top: 2px;
   }
 
@@ -56,17 +56,17 @@ export const STYLES = `<style>
   }
 
   .badge-ok {
-    background: rgba(11, 158, 158, 0.15);
-    color: #0b9e9e;
-    border: 1px solid rgba(11, 158, 158, 0.3);
+    background: color-mix(in srgb, var(--primary-color, #0b9e9e) 15%, transparent);
+    color: var(--primary-color, #0b9e9e);
+    border: 1px solid color-mix(in srgb, var(--primary-color, #0b9e9e) 30%, transparent);
   }
 
   .badge-ok::before { content: '● '; }
 
   .badge-warn {
-    background: rgba(200, 132, 58, 0.12);
-    color: #c8843a;
-    border: 1px solid rgba(200, 132, 58, 0.25);
+    background: color-mix(in srgb, var(--warning-color, #c8843a) 12%, transparent);
+    color: var(--warning-color, #c8843a);
+    border: 1px solid color-mix(in srgb, var(--warning-color, #c8843a) 25%, transparent);
   }
 
   /* ---- Card base ---- */
@@ -90,7 +90,7 @@ export const STYLES = `<style>
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.08em;
-    color: #7a8aaa;
+    color: var(--secondary-text-color, #7a8aaa);
     text-transform: uppercase;
     margin-bottom: 14px;
   }
@@ -112,7 +112,7 @@ export const STYLES = `<style>
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.08em;
-    color: #7a8aaa;
+    color: var(--secondary-text-color, #7a8aaa);
     text-transform: uppercase;
     margin-bottom: 10px;
   }
@@ -128,7 +128,7 @@ export const STYLES = `<style>
   .metric-value {
     font-size: 42px;
     font-weight: 700;
-    color: #e8eaf6;
+    color: var(--primary-text-color, #e8eaf6);
     line-height: 1;
     margin-bottom: 10px;
   }
@@ -136,7 +136,7 @@ export const STYLES = `<style>
   .metric-value .unit {
     font-size: 20px;
     font-weight: 400;
-    color: #7a8aaa;
+    color: var(--secondary-text-color, #7a8aaa);
   }
 
   .metric-status {
@@ -144,7 +144,7 @@ export const STYLES = `<style>
     align-items: center;
     gap: 6px;
     font-size: 13px;
-    color: #7a8aaa;
+    color: var(--secondary-text-color, #7a8aaa);
   }
 
   /* ---- Main row ---- */
@@ -168,7 +168,7 @@ export const STYLES = `<style>
 
   .plant-row:last-child { border-bottom: none; }
 
-  .plant-row:hover .plant-row-name { color: #0b9e9e; }
+  .plant-row:hover .plant-row-name { color: var(--primary-color, #0b9e9e); }
 
   .plant-row-info {
     min-width: 200px;
@@ -177,14 +177,14 @@ export const STYLES = `<style>
   .plant-row-name {
     font-size: 15px;
     font-weight: 600;
-    color: #e8eaf6;
+    color: var(--primary-text-color, #e8eaf6);
     margin-bottom: 2px;
     transition: color 0.15s;
   }
 
   .plant-row-species {
     font-size: 12px;
-    color: #7a8aaa;
+    color: var(--secondary-text-color, #7a8aaa);
     font-style: italic;
   }
 
@@ -209,9 +209,9 @@ export const STYLES = `<style>
     transition: width 0.4s ease;
   }
 
-  .bar-fill.ok      { background: #0b9e9e; }
-  .bar-fill.warning { background: #c8843a; }
-  .bar-fill.problem { background: #9e1d09; }
+  .bar-fill.ok      { background: var(--primary-color, #0b9e9e); }
+  .bar-fill.warning { background: var(--warning-color, #c8843a); }
+  .bar-fill.problem { background: var(--error-color, #9e1d09); }
 
   .bar-value {
     font-size: 14px;
@@ -220,9 +220,9 @@ export const STYLES = `<style>
     text-align: right;
   }
 
-  .bar-value.ok      { color: #0b9e9e; }
-  .bar-value.warning { color: #c8843a; }
-  .bar-value.problem { color: #9e1d09; }
+  .bar-value.ok      { color: var(--primary-color, #0b9e9e); }
+  .bar-value.warning { color: var(--warning-color, #c8843a); }
+  .bar-value.problem { color: var(--error-color, #9e1d09); }
 
   /* ---- Greenhouse card ---- */
 
@@ -235,7 +235,7 @@ export const STYLES = `<style>
 
   .gh-label {
     font-size: 11px;
-    color: #7a8aaa;
+    color: var(--secondary-text-color, #7a8aaa);
     text-transform: uppercase;
     letter-spacing: 0.06em;
     margin-bottom: 3px;
@@ -244,7 +244,7 @@ export const STYLES = `<style>
   .gh-value {
     font-size: 22px;
     font-weight: 700;
-    color: #e8eaf6;
+    color: var(--primary-text-color, #e8eaf6);
   }
 
   /* ---- Light chart ---- */
@@ -263,7 +263,7 @@ export const STYLES = `<style>
     min-height: 4px;
   }
 
-  .chart-bar.active { background: #0b9e9e; opacity: 0.8; }
+  .chart-bar.active { background: var(--primary-color, #0b9e9e); opacity: 0.8; }
 
   /* ---- Bottom row ---- */
 
@@ -282,7 +282,7 @@ export const STYLES = `<style>
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.08em;
-    color: #7a8aaa;
+    color: var(--secondary-text-color, #7a8aaa);
     text-transform: uppercase;
     margin-bottom: 10px;
   }
@@ -298,7 +298,7 @@ export const STYLES = `<style>
   .bottom-value {
     font-size: 36px;
     font-weight: 700;
-    color: #e8eaf6;
+    color: var(--primary-text-color, #e8eaf6);
     line-height: 1.2;
     margin-bottom: 10px;
   }
@@ -306,7 +306,7 @@ export const STYLES = `<style>
   .bottom-value .unit {
     font-size: 18px;
     font-weight: 400;
-    color: #7a8aaa;
+    color: var(--secondary-text-color, #7a8aaa);
   }
 
   .bottom-status {
@@ -314,7 +314,7 @@ export const STYLES = `<style>
     align-items: center;
     gap: 6px;
     font-size: 13px;
-    color: #7a8aaa;
+    color: var(--secondary-text-color, #7a8aaa);
   }
 
   /* ---- Status dot ---- */
@@ -327,9 +327,9 @@ export const STYLES = `<style>
     flex-shrink: 0;
   }
 
-  .dot.ok      { background: #0b9e9e; }
-  .dot.warning { background: #c8843a; }
-  .dot.problem { background: #9e1d09; }
+  .dot.ok      { background: var(--primary-color, #0b9e9e); }
+  .dot.warning { background: var(--warning-color, #c8843a); }
+  .dot.problem { background: var(--error-color, #9e1d09); }
 
   /* ---- Responsive ---- */
 
@@ -360,7 +360,7 @@ export const DETAIL_STYLES = `<style>
   .back-btn {
     background: none;
     border: none;
-    color: #7a8aaa;
+    color: var(--secondary-text-color, #7a8aaa);
     font-size: 16px;
     cursor: pointer;
     padding: 0;
@@ -369,7 +369,7 @@ export const DETAIL_STYLES = `<style>
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
 
-  .back-btn:hover { color: #0b9e9e; }
+  .back-btn:hover { color: var(--primary-color, #0b9e9e); }
 
   .layout {
     display: grid;
@@ -402,11 +402,11 @@ export const DETAIL_STYLES = `<style>
     font-size: 28px;
     font-weight: 700;
     margin-bottom: 8px;
-    color: #e8eaf6;
+    color: var(--primary-text-color, #e8eaf6);
   }
 
   .plant-species {
-    color: #7a8aaa;
+    color: var(--secondary-text-color, #7a8aaa);
     font-size: 16px;
   }
 
@@ -427,7 +427,7 @@ export const DETAIL_STYLES = `<style>
   }
 
   .label {
-    color: #7a8aaa;
+    color: var(--secondary-text-color, #7a8aaa);
     font-size: 14px;
     margin-bottom: 8px;
   }
@@ -435,7 +435,7 @@ export const DETAIL_STYLES = `<style>
   .value {
     font-size: 24px;
     font-weight: 700;
-    color: #e8eaf6;
+    color: var(--primary-text-color, #e8eaf6);
   }
 
   .text-card {
@@ -452,7 +452,7 @@ export const DETAIL_STYLES = `<style>
   .text {
     font-size: 18px;
     line-height: 1.5;
-    color: #e8eaf6;
+    color: var(--primary-text-color, #e8eaf6);
   }
 
   .recommendation {
@@ -461,9 +461,9 @@ export const DETAIL_STYLES = `<style>
     font-weight: 700;
   }
 
-  .ok      { color: #0b9e9e; }
-  .warning { color: #c8843a; }
-  .problem { color: #9e1d09; }
+  .ok      { color: var(--primary-color, #0b9e9e); }
+  .warning { color: var(--warning-color, #c8843a); }
+  .problem { color: var(--error-color, #9e1d09); }
 
   @media (max-width: 800px) {
     .layout { grid-template-columns: 1fr; }
