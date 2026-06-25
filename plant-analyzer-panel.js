@@ -2,13 +2,14 @@ const STYLES = `<style>
   .page {
     padding: 24px;
     min-height: 100vh;
-    background: #111;
-    color: white;
-    font-family: sans-serif;
+    background: transparent;
+    color: #e8eaf6;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
 
   h1 {
     margin: 0 0 24px;
+    color: #e8eaf6;
   }
 
   /* ---- Grid ---- */
@@ -21,26 +22,30 @@ const STYLES = `<style>
   }
 
   .plant-card {
-    background: #222;
-    border-radius: 16px;
+    background: rgba(30, 32, 48, 0.75);
+    border-radius: 14px;
     overflow: hidden;
     cursor: pointer;
-    border-top: 4px solid #555;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-top: 4px solid rgba(255,255,255,0.06);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
     transition: transform 0.15s, box-shadow 0.15s;
   }
 
   .plant-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6);
   }
 
-  .plant-card.ok      { border-top-color: #7ee787; }
-  .plant-card.problem { border-top-color: #ff7b72; }
-  .plant-card.warning { border-top-color: #ffd166; }
+  .plant-card.ok      { border-top-color: #0b9e9e; }
+  .plant-card.problem { border-top-color: #9b3a3a; }
+  .plant-card.warning { border-top-color: #c8843a; }
 
   .card-image {
     height: 160px;
-    background: #333 center / cover no-repeat;
+    background: #1e2030 center / cover no-repeat;
   }
 
   .card-body {
@@ -50,13 +55,14 @@ const STYLES = `<style>
 
   .card-name {
     font-size: 18px;
-    font-weight: bold;
+    font-weight: 600;
     margin-bottom: 4px;
     padding-right: 20px;
+    color: #e8eaf6;
   }
 
   .card-species {
-    color: #aaa;
+    color: #7a8aaa;
     font-size: 13px;
   }
 
@@ -67,15 +73,15 @@ const STYLES = `<style>
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background: #555;
+    background: #2a3a4a;
   }
 
-  .card-dot.ok      { background: #7ee787; }
-  .card-dot.problem { background: #ff7b72; }
-  .card-dot.warning { background: #ffd166; }
+  .card-dot.ok      { background: #0b9e9e; }
+  .card-dot.problem { background: #9b3a3a; }
+  .card-dot.warning { background: #c8843a; }
 
   .empty {
-    color: #aaa;
+    color: #7a8aaa;
     font-size: 16px;
   }
 
@@ -84,16 +90,17 @@ const STYLES = `<style>
   .back-btn {
     background: none;
     border: none;
-    color: #aaa;
+    color: #7a8aaa;
     font-size: 16px;
     cursor: pointer;
     padding: 0;
     margin-bottom: 20px;
     display: block;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
 
   .back-btn:hover {
-    color: white;
+    color: #0b9e9e;
   }
 
   .layout {
@@ -104,9 +111,13 @@ const STYLES = `<style>
   }
 
   .image-card {
-    background: #222;
-    border-radius: 16px;
+    background: rgba(30, 32, 48, 0.75);
+    border-radius: 14px;
     overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.06);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
   }
 
   .plant-image {
@@ -114,7 +125,7 @@ const STYLES = `<style>
     height: 260px;
     object-fit: cover;
     display: block;
-    background: #333;
+    background: #1e2030;
   }
 
   .plant-info {
@@ -123,12 +134,13 @@ const STYLES = `<style>
 
   .plant-name {
     font-size: 28px;
-    font-weight: bold;
+    font-weight: 700;
     margin-bottom: 8px;
+    color: #e8eaf6;
   }
 
   .plant-species {
-    color: #aaa;
+    color: #7a8aaa;
     font-size: 16px;
   }
 
@@ -139,43 +151,53 @@ const STYLES = `<style>
   }
 
   .card {
-    background: #222;
-    border-radius: 16px;
+    background: rgba(30, 32, 48, 0.75);
+    border-radius: 14px;
     padding: 20px;
+    border: 1px solid rgba(255,255,255,0.06);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
   }
 
   .label {
-    color: #aaa;
+    color: #7a8aaa;
     font-size: 14px;
     margin-bottom: 8px;
   }
 
   .value {
     font-size: 24px;
-    font-weight: bold;
+    font-weight: 700;
+    color: #e8eaf6;
   }
 
   .text-card {
     margin-top: 16px;
     padding: 20px;
-    border-radius: 12px;
-    background: #222;
+    border-radius: 14px;
+    background: rgba(30, 32, 48, 0.75);
+    border: 1px solid rgba(255,255,255,0.06);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
   }
 
   .text {
     font-size: 18px;
     line-height: 1.5;
+    color: #e8eaf6;
   }
 
   .recommendation {
     font-size: 20px;
     line-height: 1.5;
-    font-weight: bold;
+    font-weight: 700;
   }
 
-  .ok      { color: #7ee787; }
-  .warning { color: #ffd166; }
-  .problem { color: #ff7b72; }
+  .ok      { color: #0b9e9e; }
+  .warning { color: #c8843a; }
+  .problem { color: #9b3a3a; }
 
   @media (max-width: 800px) {
     .layout {
