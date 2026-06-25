@@ -492,7 +492,10 @@ function statusCls(status) {
 function getPlantSensorValue(type, attrs, states, problems = []) {
   var _a, _b;
   const fromProblem = (_a = problems.find((p) => p.sensor_type === type)) == null ? void 0 : _a.current;
-  if (typeof fromProblem === "number" && !isNaN(fromProblem)) return fromProblem;
+  if (fromProblem != null) {
+    const val = Number(fromProblem);
+    if (!isNaN(val)) return val;
+  }
   const direct = attrs[type];
   if (typeof direct === "number" && !isNaN(direct)) return direct;
   const sensors = attrs["sensors"];

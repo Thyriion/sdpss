@@ -11,9 +11,9 @@ export interface Hass {
 export interface PlantProblem {
   sensor_type?: string;
   status?: string;
-  current?: number;
-  min?: number;
-  max?: number;
+  current?: number | string;
+  min?: number | string;
+  max?: number | string;
 }
 
 export interface EntityConfig {

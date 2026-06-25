@@ -11,9 +11,12 @@ export function getPlantSensorValue(
   states: Record<string, HassEntity>,
   problems: PlantProblem[] = []
 ): number | null {
-  // 1. from problems[].current (reliable when a problem exists)
+  // 1. from problems[].current — stored as string by the integration
   const fromProblem = problems.find(p => p.sensor_type === type)?.current;
-  if (typeof fromProblem === 'number' && !isNaN(fromProblem)) return fromProblem;
+  if (fromProblem != null) {
+    const val = Number(fromProblem);
+    if (!isNaN(val)) return val;
+  }
 
   // 2. direct attribute (some integration versions set this)
   const direct = attrs[type];
