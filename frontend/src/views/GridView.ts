@@ -1,4 +1,4 @@
-import { HassEntity, EntityConfig } from '../types';
+import { HassEntity, EntityConfig, PlantProblem } from '../types';
 import { STYLES } from '../styles';
 import { getPlantSensorValue } from '../utils/plants';
 
@@ -202,13 +202,21 @@ function buildPlantList(root: HTMLElement, plants: HassEntity[], states: Record<
     const a = p.attributes;
     const name = (a['friendly_name'] as string) ?? p.entity_id;
     const species = (a['species'] as string) ?? '';
-    const problems = Array.isArray(a['problems']) ? a['problems'] as { sensor_type?: string; current?: number }[] : [];
+    const problems = Array.isArray(a['problems']) ? a['problems'] as PlantProblem[] : [];
     const moisture = getPlantSensorValue('moisture', a, states, problems, p.entity_id);
     const moistureStatus = a['moisture_status'] as string | undefined;
+    const mProb = problems.find(pr => pr.sensor_type === 'moisture');
+    const mMin = mProb?.min != null ? Number(mProb.min) : null;
+    const mMax = mProb?.max != null ? Number(mProb.max) : null;
 
-    const cls = moisture != null
-      ? (moisture < 20 ? 'problem' : moisture < 30 ? 'warning' : 'ok')
-      : (moistureStatus === 'Low' ? 'problem' : moistureStatus === 'High' ? 'warning' : 'ok');
+    const cls: 'ok' | 'warning' | 'problem' =
+      moisture != null && mMin != null && mMax != null
+        ? (moisture < mMin || moisture > mMax
+            ? 'problem'
+            : moisture < mMin + 0.1 * (mMax - mMin)
+              ? 'warning'
+              : 'ok')
+        : (moistureStatus === 'Low' || moistureStatus === 'High' ? 'problem' : 'ok');
     const pct = moisture != null ? Math.min(100, Math.max(0, Math.round(moisture))) : null;
 
     return `<div class="plant-row" data-plant="${p.entity_id}">

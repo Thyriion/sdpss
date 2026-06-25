@@ -211,7 +211,7 @@ const STYLES = `<style>
 
   .bar-fill.ok      { background: #0b9e9e; }
   .bar-fill.warning { background: #c8843a; }
-  .bar-fill.problem { background: #9b3a3a; }
+  .bar-fill.problem { background: #b84b3a; }
 
   .bar-value {
     font-size: 14px;
@@ -222,7 +222,7 @@ const STYLES = `<style>
 
   .bar-value.ok      { color: #0b9e9e; }
   .bar-value.warning { color: #c8843a; }
-  .bar-value.problem { color: #9b3a3a; }
+  .bar-value.problem { color: #b84b3a; }
 
   /* ---- Greenhouse card ---- */
 
@@ -741,7 +741,10 @@ function buildPlantList(root, plants, states) {
     const problems = Array.isArray(a["problems"]) ? a["problems"] : [];
     const moisture = getPlantSensorValue("moisture", a, states, problems, p.entity_id);
     const moistureStatus = a["moisture_status"];
-    const cls = moisture != null ? moisture < 20 ? "problem" : moisture < 30 ? "warning" : "ok" : moistureStatus === "Low" ? "problem" : moistureStatus === "High" ? "warning" : "ok";
+    const mProb = problems.find((pr) => pr.sensor_type === "moisture");
+    const mMin = (mProb == null ? void 0 : mProb.min) != null ? Number(mProb.min) : null;
+    const mMax = (mProb == null ? void 0 : mProb.max) != null ? Number(mProb.max) : null;
+    const cls = moisture != null && mMin != null && mMax != null ? moisture < mMin || moisture > mMax ? "problem" : moisture < mMin + 0.1 * (mMax - mMin) ? "warning" : "ok" : moistureStatus === "Low" || moistureStatus === "High" ? "problem" : "ok";
     const pct = moisture != null ? Math.min(100, Math.max(0, Math.round(moisture))) : null;
     return `<div class="plant-row" data-plant="${p.entity_id}">
       <div class="plant-row-info">
