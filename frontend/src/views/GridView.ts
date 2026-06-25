@@ -1,17 +1,16 @@
-import { HassEntity } from '../types';
+import { HassEntity, EntityConfig } from '../types';
 import { STYLES } from '../styles';
 
-// Adjust these entity IDs to match your HA setup
-const ENTITIES = {
-  light:        'sensor.greenhouse_esp32_bh1750_illuminance',  // lux
-  temperature:  'sensor.greenhouse_esp32_bme280_temperature',  // °C
-  humidity:     'sensor.greenhouse_esp32_bme280_humidity',     // %
-  rainTank:     'sensor.regenwassertank_liter',                // L (template sensor)
-  solarBattery: 'sensor.solar_esp_outdoor_akku',              // %
-  lastAction:   'input_text.letzte_bewasserung',              // format: "Titel|Details"
+export const DEFAULT_ENTITIES: Required<EntityConfig> = {
+  light:        'sensor.greenhouse_esp32_bh1750_illuminance',
+  temperature:  'sensor.greenhouse_esp32_bme280_temperature',
+  humidity:     'sensor.greenhouse_esp32_bme280_humidity',
+  rainTank:     'sensor.regenwassertank_liter',
+  solarBattery: 'sensor.solar_esp_outdoor_akku',
+  lastAction:   'input_text.letzte_bewasserung',
 };
 
-const RAIN_TANK_MAX_L = 200; // adjust to your tank capacity
+export const DEFAULT_TANK_MAX_L = 200;
 
 export function buildDashboardHTML(): string {
   return `${STYLES}
@@ -109,7 +108,9 @@ export function buildDashboardHTML(): string {
 export function updateDashboard(
   root: HTMLElement,
   plants: HassEntity[],
-  states: Record<string, HassEntity>
+  states: Record<string, HassEntity>,
+  entities: Required<EntityConfig> = DEFAULT_ENTITIES,
+  tankMaxL: number = DEFAULT_TANK_MAX_L
 ): void {
   updateClock(root);
 
@@ -133,7 +134,7 @@ export function updateDashboard(
   }
 
   // Light
-  const lightEnt = states[ENTITIES.light];
+  const lightEnt = states[entities.light];
   if (lightEnt && lightEnt.state !== 'unavailable') {
     const lux = parseFloat(lightEnt.state);
     const klx = (lux / 1000).toFixed(1);
@@ -144,7 +145,7 @@ export function updateDashboard(
   }
 
   // Temperature
-  const tempEnt = states[ENTITIES.temperature];
+  const tempEnt = states[entities.temperature];
   if (tempEnt && tempEnt.state !== 'unavailable') {
     const t = parseFloat(tempEnt.state);
     setHtml(root, 'm-temp', `${Math.round(t)} <span class="unit">°C</span>`);
@@ -154,7 +155,7 @@ export function updateDashboard(
   }
 
   // Humidity
-  const humEnt = states[ENTITIES.humidity];
+  const humEnt = states[entities.humidity];
   if (humEnt && humEnt.state !== 'unavailable') {
     setText(root, 'gh-hum', `${Math.round(parseFloat(humEnt.state))} %`);
   }
@@ -166,16 +167,16 @@ export function updateDashboard(
   buildPlantList(root, plants);
 
   // Rain tank
-  const tankEnt = states[ENTITIES.rainTank];
+  const tankEnt = states[entities.rainTank];
   if (tankEnt && tankEnt.state !== 'unavailable') {
     const liters = Math.round(parseFloat(tankEnt.state));
     setHtml(root, 'b-tank', `${liters} <span class="unit">L</span>`);
-    const pct = Math.round((liters / RAIN_TANK_MAX_L) * 100);
+    const pct = Math.round((liters / tankMaxL) * 100);
     setDot(root, 'b-tank-s', pct > 20 ? 'ok' : 'warning', `${pct}% voll`);
   }
 
   // Solar battery
-  const solarEnt = states[ENTITIES.solarBattery];
+  const solarEnt = states[entities.solarBattery];
   if (solarEnt && solarEnt.state !== 'unavailable') {
     const pct = Math.round(parseFloat(solarEnt.state));
     setHtml(root, 'b-solar', `${pct} <span class="unit">%</span>`);
@@ -184,7 +185,7 @@ export function updateDashboard(
   }
 
   // Last action
-  const actionEnt = states[ENTITIES.lastAction];
+  const actionEnt = states[entities.lastAction];
   if (actionEnt && actionEnt.state !== 'unavailable' && actionEnt.state !== '') {
     const parts = actionEnt.state.split('|');
     setText(root, 'b-action', parts[0] ?? actionEnt.state);

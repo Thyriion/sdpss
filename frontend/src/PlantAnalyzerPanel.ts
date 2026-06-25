@@ -1,5 +1,5 @@
-import { Hass, HassEntity } from './types';
-import { buildDashboardHTML, updateDashboard, updateClock } from './views/GridView';
+import { Hass, HassEntity, PanelConfig, EntityConfig } from './types';
+import { buildDashboardHTML, updateDashboard, updateClock, DEFAULT_ENTITIES, DEFAULT_TANK_MAX_L } from './views/GridView';
 import { buildDetailHTML, updateDetail } from './views/DetailView';
 
 export class PlantAnalyzerPanel extends HTMLElement {
@@ -7,6 +7,15 @@ export class PlantAnalyzerPanel extends HTMLElement {
   private _selectedPlantId: string | null = null;
   private _renderedView: string | null = null;
   private _timer: ReturnType<typeof setInterval> | null = null;
+  private _entities: Required<EntityConfig> = DEFAULT_ENTITIES;
+  private _tankMaxL: number = DEFAULT_TANK_MAX_L;
+
+  set panel(panel: { config?: PanelConfig }) {
+    const cfg = panel?.config ?? {};
+    this._entities = { ...DEFAULT_ENTITIES, ...cfg.entities };
+    this._tankMaxL = cfg.rain_tank_max_l ?? DEFAULT_TANK_MAX_L;
+    this._update();
+  }
 
   set hass(hass: Hass) {
     this._hass = hass;
@@ -65,7 +74,7 @@ export class PlantAnalyzerPanel extends HTMLElement {
 
   private _updateGrid(): void {
     if (!this._hass) return;
-    updateDashboard(this, this._getPlants(), this._hass.states);
+    updateDashboard(this, this._getPlants(), this._hass.states, this._entities, this._tankMaxL);
   }
 
   private _buildDetail(): void {

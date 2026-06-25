@@ -468,21 +468,15 @@ const DETAIL_STYLES = `<style>
     .layout { grid-template-columns: 1fr; }
   }
 </style>`;
-const ENTITIES = {
+const DEFAULT_ENTITIES = {
   light: "sensor.greenhouse_esp32_bh1750_illuminance",
-  // lux
   temperature: "sensor.greenhouse_esp32_bme280_temperature",
-  // °C
   humidity: "sensor.greenhouse_esp32_bme280_humidity",
-  // %
   rainTank: "sensor.regenwassertank_liter",
-  // L (template sensor)
   solarBattery: "sensor.solar_esp_outdoor_akku",
-  // %
   lastAction: "input_text.letzte_bewasserung"
-  // format: "Titel|Details"
 };
-const RAIN_TANK_MAX_L = 200;
+const DEFAULT_TANK_MAX_L = 200;
 function buildDashboardHTML() {
   return `${STYLES}
     <div class="dashboard">
@@ -575,7 +569,7 @@ function buildDashboardHTML() {
 
     </div>`;
 }
-function updateDashboard(root, plants, states) {
+function updateDashboard(root, plants, states, entities = DEFAULT_ENTITIES, tankMaxL = DEFAULT_TANK_MAX_L) {
   updateClock(root);
   const problemCount = plants.filter(
     (p) => Array.isArray(p.attributes["problems"]) && p.attributes["problems"].length > 0
@@ -592,7 +586,7 @@ function updateDashboard(root, plants, states) {
     const cls = avg < 20 ? "problem" : avg < 30 ? "warning" : "ok";
     setDot(root, "m-moisture-s", cls, cls === "ok" ? "Optimal" : cls === "warning" ? "Zu trocken" : "Kritisch");
   }
-  const lightEnt = states[ENTITIES.light];
+  const lightEnt = states[entities.light];
   if (lightEnt && lightEnt.state !== "unavailable") {
     const lux = parseFloat(lightEnt.state);
     const klx = (lux / 1e3).toFixed(1);
@@ -601,7 +595,7 @@ function updateDashboard(root, plants, states) {
     setText$1(root, "gh-light", `${klx} klx`);
     buildLightChart(root, lux);
   }
-  const tempEnt = states[ENTITIES.temperature];
+  const tempEnt = states[entities.temperature];
   if (tempEnt && tempEnt.state !== "unavailable") {
     const t = parseFloat(tempEnt.state);
     setHtml(root, "m-temp", `${Math.round(t)} <span class="unit">°C</span>`);
@@ -609,27 +603,27 @@ function updateDashboard(root, plants, states) {
     setDot(root, "m-temp-s", cls, cls === "ok" ? "Idealer Bereich" : "Außerhalb Bereich");
     setText$1(root, "gh-temp", `${Math.round(t)} °C`);
   }
-  const humEnt = states[ENTITIES.humidity];
+  const humEnt = states[entities.humidity];
   if (humEnt && humEnt.state !== "unavailable") {
     setText$1(root, "gh-hum", `${Math.round(parseFloat(humEnt.state))} %`);
   }
   setText$1(root, "gh-plants", String(plants.length));
   buildPlantList(root, plants);
-  const tankEnt = states[ENTITIES.rainTank];
+  const tankEnt = states[entities.rainTank];
   if (tankEnt && tankEnt.state !== "unavailable") {
     const liters = Math.round(parseFloat(tankEnt.state));
     setHtml(root, "b-tank", `${liters} <span class="unit">L</span>`);
-    const pct = Math.round(liters / RAIN_TANK_MAX_L * 100);
+    const pct = Math.round(liters / tankMaxL * 100);
     setDot(root, "b-tank-s", pct > 20 ? "ok" : "warning", `${pct}% voll`);
   }
-  const solarEnt = states[ENTITIES.solarBattery];
+  const solarEnt = states[entities.solarBattery];
   if (solarEnt && solarEnt.state !== "unavailable") {
     const pct = Math.round(parseFloat(solarEnt.state));
     setHtml(root, "b-solar", `${pct} <span class="unit">%</span>`);
     const cls = pct > 20 ? "ok" : "warning";
     setDot(root, "b-solar-s", cls, pct > 80 ? "Akku geladen" : pct > 20 ? "Akku lädt" : "Akku niedrig");
   }
-  const actionEnt = states[ENTITIES.lastAction];
+  const actionEnt = states[entities.lastAction];
   if (actionEnt && actionEnt.state !== "unavailable" && actionEnt.state !== "") {
     const parts = actionEnt.state.split("|");
     setText$1(root, "b-action", parts[0] ?? actionEnt.state);
@@ -867,6 +861,14 @@ class PlantAnalyzerPanel extends HTMLElement {
     this._selectedPlantId = null;
     this._renderedView = null;
     this._timer = null;
+    this._entities = DEFAULT_ENTITIES;
+    this._tankMaxL = DEFAULT_TANK_MAX_L;
+  }
+  set panel(panel) {
+    const cfg = (panel == null ? void 0 : panel.config) ?? {};
+    this._entities = { ...DEFAULT_ENTITIES, ...cfg.entities };
+    this._tankMaxL = cfg.rain_tank_max_l ?? DEFAULT_TANK_MAX_L;
+    this._update();
   }
   set hass(hass) {
     this._hass = hass;
@@ -914,7 +916,7 @@ class PlantAnalyzerPanel extends HTMLElement {
   }
   _updateGrid() {
     if (!this._hass) return;
-    updateDashboard(this, this._getPlants(), this._hass.states);
+    updateDashboard(this, this._getPlants(), this._hass.states, this._entities, this._tankMaxL);
   }
   _buildDetail() {
     var _a, _b;

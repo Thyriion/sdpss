@@ -16,6 +16,20 @@ export interface PlantProblem {
   max?: number;
 }
 
+export interface EntityConfig {
+  light?: string;
+  temperature?: string;
+  humidity?: string;
+  rainTank?: string;
+  solarBattery?: string;
+  lastAction?: string;
+}
+
+export interface PanelConfig {
+  entities?: EntityConfig;
+  rain_tank_max_l?: number;
+}
+
 export interface PlantAttributes {
   friendly_name?: string;
   species?: string;
