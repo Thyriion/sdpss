@@ -211,7 +211,7 @@ const STYLES = `<style>
 
   .bar-fill.ok      { background: #0b9e9e; }
   .bar-fill.warning { background: #c8843a; }
-  .bar-fill.problem { background: #b84b3a; }
+  .bar-fill.problem { background: #9e1d09; }
 
   .bar-value {
     font-size: 14px;
@@ -222,7 +222,7 @@ const STYLES = `<style>
 
   .bar-value.ok      { color: #0b9e9e; }
   .bar-value.warning { color: #c8843a; }
-  .bar-value.problem { color: #b84b3a; }
+  .bar-value.problem { color: #9e1d09; }
 
   /* ---- Greenhouse card ---- */
 
@@ -329,7 +329,7 @@ const STYLES = `<style>
 
   .dot.ok      { background: #0b9e9e; }
   .dot.warning { background: #c8843a; }
-  .dot.problem { background: #9b3a3a; }
+  .dot.problem { background: #9e1d09; }
 
   /* ---- Responsive ---- */
 
@@ -462,7 +462,7 @@ const DETAIL_STYLES = `<style>
 
   .ok      { color: #0b9e9e; }
   .warning { color: #c8843a; }
-  .problem { color: #9b3a3a; }
+  .problem { color: #9e1d09; }
 
   @media (max-width: 800px) {
     .layout { grid-template-columns: 1fr; }
