@@ -1,15 +1,20 @@
 import { PlantAttributes, PlantProblem, HassEntity } from '../types';
 import { fmt } from './format';
 
-/**
- * Reads a plant sensor value independent of problems[].
- * Priority: problems[].current → direct attribute → sensor entity via sensors dict
- */
+const SENSOR_DEVICE_CLASS: Record<string, string> = {
+  moisture:     'moisture',
+  illuminance:  'illuminance',
+  brightness:   'illuminance',
+  temperature:  'temperature',
+  conductivity: 'conductivity',
+};
+
 export function getPlantSensorValue(
   type: string,
   attrs: Record<string, unknown>,
   states: Record<string, HassEntity>,
-  problems: PlantProblem[] = []
+  problems: PlantProblem[] = [],
+  plantEntityId?: string
 ): number | null {
   // 1. from problems[].current — stored as string by the integration
   const fromProblem = problems.find(p => p.sensor_type === type)?.current;
@@ -24,10 +29,28 @@ export function getPlantSensorValue(
 
   // 3. via sensors dict: { moisture: "sensor.foo", illuminance: "sensor.bar" }
   const sensors = attrs['sensors'] as Record<string, string> | undefined;
-  const entityId = sensors?.[type];
-  if (entityId) {
-    const val = parseFloat(states[entityId]?.state ?? '');
+  const sensorId = sensors?.[type];
+  if (sensorId) {
+    const val = parseFloat(states[sensorId]?.state ?? '');
     if (!isNaN(val)) return val;
+  }
+
+  // 4. helper sensors created by the integration: sensor.{plant_slug}_{name}
+  //    matched by device_class — no entity IDs hardcoded
+  if (plantEntityId?.startsWith('plant.')) {
+    const slug = plantEntityId.slice(6);
+    const prefix = `sensor.${slug}_`;
+    const deviceClass = SENSOR_DEVICE_CLASS[type];
+    if (deviceClass) {
+      const match = Object.values(states).find(e =>
+        e.entity_id.startsWith(prefix) &&
+        (e.attributes['device_class'] as string | undefined) === deviceClass
+      );
+      if (match) {
+        const val = parseFloat(match.state);
+        if (!isNaN(val)) return val;
+      }
+    }
   }
 
   return null;

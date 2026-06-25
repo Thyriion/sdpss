@@ -72,14 +72,14 @@ export function updateDetail(
   setText(root, 'plant-status', statusLabel(problems));
   setCls(root, 'plant-status', problems.length ? 'problem' : 'ok');
 
-  const moistureVal = getPlantSensorValue('moisture', plant.attributes, states, problems);
+  const moistureVal = getPlantSensorValue('moisture', plant.attributes, states, problems, plant.entity_id);
   setText(root, 'moisture-value', moistureVal != null ? `${fmt(moistureVal)} %` : '–');
   setText(root, 'moisture-status', translateStatus(a.moisture_status));
   setCls(root, 'moisture-status', statusCls(a.moisture_status));
 
   const lightVal =
-    getPlantSensorValue('illuminance', plant.attributes, states, problems) ??
-    getPlantSensorValue('brightness', plant.attributes, states, problems);
+    getPlantSensorValue('illuminance', plant.attributes, states, problems, plant.entity_id) ??
+    getPlantSensorValue('brightness', plant.attributes, states, problems, plant.entity_id);
   setText(root, 'light-value', lightVal != null ? `${fmt(lightVal)} lx` : '–');
   const lightStatus = a.illuminance_status ?? a.brightness_status ?? null;
   setText(root, 'light-status', translateStatus(lightStatus));

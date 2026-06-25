@@ -489,7 +489,14 @@ function statusCls(status) {
   if (!status) return "warning";
   return status === "Low" || status === "High" ? "problem" : "ok";
 }
-function getPlantSensorValue(type, attrs, states, problems = []) {
+const SENSOR_DEVICE_CLASS = {
+  moisture: "moisture",
+  illuminance: "illuminance",
+  brightness: "illuminance",
+  temperature: "temperature",
+  conductivity: "conductivity"
+};
+function getPlantSensorValue(type, attrs, states, problems = [], plantEntityId) {
   var _a, _b;
   const fromProblem = (_a = problems.find((p) => p.sensor_type === type)) == null ? void 0 : _a.current;
   if (fromProblem != null) {
@@ -499,10 +506,24 @@ function getPlantSensorValue(type, attrs, states, problems = []) {
   const direct = attrs[type];
   if (typeof direct === "number" && !isNaN(direct)) return direct;
   const sensors = attrs["sensors"];
-  const entityId = sensors == null ? void 0 : sensors[type];
-  if (entityId) {
-    const val = parseFloat(((_b = states[entityId]) == null ? void 0 : _b.state) ?? "");
+  const sensorId = sensors == null ? void 0 : sensors[type];
+  if (sensorId) {
+    const val = parseFloat(((_b = states[sensorId]) == null ? void 0 : _b.state) ?? "");
     if (!isNaN(val)) return val;
+  }
+  if (plantEntityId == null ? void 0 : plantEntityId.startsWith("plant.")) {
+    const slug = plantEntityId.slice(6);
+    const prefix = `sensor.${slug}_`;
+    const deviceClass = SENSOR_DEVICE_CLASS[type];
+    if (deviceClass) {
+      const match = Object.values(states).find(
+        (e) => e.entity_id.startsWith(prefix) && e.attributes["device_class"] === deviceClass
+      );
+      if (match) {
+        const val = parseFloat(match.state);
+        if (!isNaN(val)) return val;
+      }
+    }
   }
   return null;
 }
@@ -718,7 +739,7 @@ function buildPlantList(root, plants, states) {
     const name = a["friendly_name"] ?? p.entity_id;
     const species = a["species"] ?? "";
     const problems = Array.isArray(a["problems"]) ? a["problems"] : [];
-    const moisture = getPlantSensorValue("moisture", a, states, problems);
+    const moisture = getPlantSensorValue("moisture", a, states, problems, p.entity_id);
     const moistureStatus = a["moisture_status"];
     const cls = moisture != null ? moisture < 20 ? "problem" : moisture < 30 ? "warning" : "ok" : moistureStatus === "Low" ? "problem" : moistureStatus === "High" ? "warning" : "ok";
     const pct = moisture != null ? Math.min(100, Math.max(0, Math.round(moisture))) : null;
@@ -835,11 +856,11 @@ function updateDetail(root, plant, states) {
   setText(root, "plant-species", a.species ?? "");
   setText(root, "plant-status", statusLabel(problems));
   setCls(root, "plant-status", problems.length ? "problem" : "ok");
-  const moistureVal = getPlantSensorValue("moisture", plant.attributes, states, problems);
+  const moistureVal = getPlantSensorValue("moisture", plant.attributes, states, problems, plant.entity_id);
   setText(root, "moisture-value", moistureVal != null ? `${fmt(moistureVal)} %` : "–");
   setText(root, "moisture-status", translateStatus(a.moisture_status));
   setCls(root, "moisture-status", statusCls(a.moisture_status));
-  const lightVal = getPlantSensorValue("illuminance", plant.attributes, states, problems) ?? getPlantSensorValue("brightness", plant.attributes, states, problems);
+  const lightVal = getPlantSensorValue("illuminance", plant.attributes, states, problems, plant.entity_id) ?? getPlantSensorValue("brightness", plant.attributes, states, problems, plant.entity_id);
   setText(root, "light-value", lightVal != null ? `${fmt(lightVal)} lx` : "–");
   const lightStatus = a.illuminance_status ?? a.brightness_status ?? null;
   setText(root, "light-status", translateStatus(lightStatus));

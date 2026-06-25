@@ -203,7 +203,7 @@ function buildPlantList(root: HTMLElement, plants: HassEntity[], states: Record<
     const name = (a['friendly_name'] as string) ?? p.entity_id;
     const species = (a['species'] as string) ?? '';
     const problems = Array.isArray(a['problems']) ? a['problems'] as { sensor_type?: string; current?: number }[] : [];
-    const moisture = getPlantSensorValue('moisture', a, states, problems);
+    const moisture = getPlantSensorValue('moisture', a, states, problems, p.entity_id);
     const moistureStatus = a['moisture_status'] as string | undefined;
 
     const cls = moisture != null
