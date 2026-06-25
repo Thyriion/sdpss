@@ -1,4 +1,354 @@
 export const STYLES = `<style>
+  * { box-sizing: border-box; }
+
+  .dashboard {
+    padding: 20px 24px;
+    min-height: 100vh;
+    background: transparent;
+    color: #e8eaf6;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* ---- Header ---- */
+
+  .dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .header-star {
+    color: #0b9e9e;
+    font-size: 22px;
+  }
+
+  .header-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #e8eaf6;
+  }
+
+  .header-date {
+    font-size: 13px;
+    color: #7a8aaa;
+    margin-top: 2px;
+  }
+
+  .header-badges {
+    display: flex;
+    gap: 8px;
+  }
+
+  .badge {
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .badge-ok {
+    background: rgba(11, 158, 158, 0.15);
+    color: #0b9e9e;
+    border: 1px solid rgba(11, 158, 158, 0.3);
+  }
+
+  .badge-ok::before { content: '● '; }
+
+  .badge-warn {
+    background: rgba(200, 132, 58, 0.12);
+    color: #c8843a;
+    border: 1px solid rgba(200, 132, 58, 0.25);
+  }
+
+  /* ---- Card base ---- */
+
+  .metric-card,
+  .plant-list-card,
+  .greenhouse-card,
+  .bottom-card {
+    background: rgba(30, 32, 48, 0.75);
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.06);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+    padding: 20px;
+  }
+
+  /* ---- Section label ---- */
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: #7a8aaa;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  /* ---- Metrics row ---- */
+
+  .metrics-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .metric-card {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .metric-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: #7a8aaa;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .metric-icon {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    font-size: 20px;
+    opacity: 0.3;
+  }
+
+  .metric-value {
+    font-size: 42px;
+    font-weight: 700;
+    color: #e8eaf6;
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+
+  .metric-value .unit {
+    font-size: 20px;
+    font-weight: 400;
+    color: #7a8aaa;
+  }
+
+  .metric-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #7a8aaa;
+  }
+
+  /* ---- Main row ---- */
+
+  .main-row {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 16px;
+  }
+
+  /* ---- Plant list ---- */
+
+  .plant-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 11px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    cursor: pointer;
+  }
+
+  .plant-row:last-child { border-bottom: none; }
+
+  .plant-row:hover .plant-row-name { color: #0b9e9e; }
+
+  .plant-row-info {
+    min-width: 200px;
+  }
+
+  .plant-row-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #e8eaf6;
+    margin-bottom: 2px;
+    transition: color 0.15s;
+  }
+
+  .plant-row-species {
+    font-size: 12px;
+    color: #7a8aaa;
+    font-style: italic;
+  }
+
+  .plant-row-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .bar-track {
+    flex: 1;
+    height: 6px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.4s ease;
+  }
+
+  .bar-fill.ok      { background: #0b9e9e; }
+  .bar-fill.warning { background: #c8843a; }
+  .bar-fill.problem { background: #9b3a3a; }
+
+  .bar-value {
+    font-size: 14px;
+    font-weight: 600;
+    min-width: 40px;
+    text-align: right;
+  }
+
+  .bar-value.ok      { color: #0b9e9e; }
+  .bar-value.warning { color: #c8843a; }
+  .bar-value.problem { color: #9b3a3a; }
+
+  /* ---- Greenhouse card ---- */
+
+  .greenhouse-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 4px;
+  }
+
+  .gh-label {
+    font-size: 11px;
+    color: #7a8aaa;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 3px;
+  }
+
+  .gh-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: #e8eaf6;
+  }
+
+  /* ---- Light chart ---- */
+
+  .light-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    height: 48px;
+  }
+
+  .chart-bar {
+    flex: 1;
+    border-radius: 2px 2px 0 0;
+    background: rgba(255,255,255,0.08);
+    min-height: 4px;
+  }
+
+  .chart-bar.active { background: #0b9e9e; opacity: 0.8; }
+
+  /* ---- Bottom row ---- */
+
+  .bottom-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .bottom-card {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .bottom-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: #7a8aaa;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .bottom-icon {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    font-size: 20px;
+    opacity: 0.25;
+  }
+
+  .bottom-value {
+    font-size: 36px;
+    font-weight: 700;
+    color: #e8eaf6;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+
+  .bottom-value .unit {
+    font-size: 18px;
+    font-weight: 400;
+    color: #7a8aaa;
+  }
+
+  .bottom-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #7a8aaa;
+  }
+
+  /* ---- Status dot ---- */
+
+  .dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .dot.ok      { background: #0b9e9e; }
+  .dot.warning { background: #c8843a; }
+  .dot.problem { background: #9b3a3a; }
+
+  /* ---- Responsive ---- */
+
+  @media (max-width: 1000px) {
+    .main-row { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 800px) {
+    .metrics-row { grid-template-columns: 1fr 1fr; }
+    .bottom-row  { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 500px) {
+    .metrics-row { grid-template-columns: 1fr; }
+    .bottom-row  { grid-template-columns: 1fr; }
+  }
+</style>`;
+
+export const DETAIL_STYLES = `<style>
   .page {
     padding: 24px;
     min-height: 100vh;
@@ -6,86 +356,6 @@ export const STYLES = `<style>
     color: #e8eaf6;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
-
-  h1 {
-    margin: 0 0 24px;
-    color: #e8eaf6;
-  }
-
-  /* ---- Grid ---- */
-
-  .plant-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 20px;
-    max-width: 1100px;
-  }
-
-  .plant-card {
-    background: rgba(30, 32, 48, 0.75);
-    border-radius: 14px;
-    overflow: hidden;
-    cursor: pointer;
-    border: 1px solid rgba(255,255,255,0.06);
-    border-top: 4px solid rgba(255,255,255,0.06);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
-    transition: transform 0.15s, box-shadow 0.15s;
-  }
-
-  .plant-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.6);
-  }
-
-  .plant-card.ok      { border-top-color: #0b9e9e; }
-  .plant-card.problem { border-top-color: #9b3a3a; }
-  .plant-card.warning { border-top-color: #c8843a; }
-
-  .card-image {
-    height: 160px;
-    background: #1e2030 center / cover no-repeat;
-  }
-
-  .card-body {
-    padding: 16px;
-    position: relative;
-  }
-
-  .card-name {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 4px;
-    padding-right: 20px;
-    color: #e8eaf6;
-  }
-
-  .card-species {
-    color: #7a8aaa;
-    font-size: 13px;
-  }
-
-  .card-dot {
-    position: absolute;
-    top: 18px;
-    right: 16px;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #2a3a4a;
-  }
-
-  .card-dot.ok      { background: #0b9e9e; }
-  .card-dot.problem { background: #9b3a3a; }
-  .card-dot.warning { background: #c8843a; }
-
-  .empty {
-    color: #7a8aaa;
-    font-size: 16px;
-  }
-
-  /* ---- Detail ---- */
 
   .back-btn {
     background: none;
@@ -99,9 +369,7 @@ export const STYLES = `<style>
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
 
-  .back-btn:hover {
-    color: #0b9e9e;
-  }
+  .back-btn:hover { color: #0b9e9e; }
 
   .layout {
     display: grid;
@@ -128,9 +396,7 @@ export const STYLES = `<style>
     background: #1e2030;
   }
 
-  .plant-info {
-    padding: 20px;
-  }
+  .plant-info { padding: 20px; }
 
   .plant-name {
     font-size: 28px;
@@ -200,8 +466,6 @@ export const STYLES = `<style>
   .problem { color: #9b3a3a; }
 
   @media (max-width: 800px) {
-    .layout {
-      grid-template-columns: 1fr;
-    }
+    .layout { grid-template-columns: 1fr; }
   }
 </style>`;

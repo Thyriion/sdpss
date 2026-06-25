@@ -1,7 +1,7 @@
 import { HassEntity, PlantAttributes } from '../types';
 import { fmt, translateStatus, statusCls } from '../utils/format';
 import { getProblems, problemByType, statusLabel, getRecommendation } from '../utils/plants';
-import { STYLES } from '../styles';
+import { DETAIL_STYLES as STYLES } from '../styles';
 
 export function buildDetailHTML(): string {
   return `${STYLES}
