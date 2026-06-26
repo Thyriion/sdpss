@@ -4,7 +4,7 @@ const STYLES = `<style>
   .dashboard {
     padding: 20px 24px;
     min-height: 100vh;
-    background: transparent;
+    background: var(--primary-background-color, transparent);
     color: var(--primary-text-color, #e8eaf6);
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     display: flex;
@@ -160,7 +160,7 @@ const STYLES = `<style>
     align-items: center;
     gap: 16px;
     padding: 11px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
+    border-bottom: 1px solid var(--divider-color, rgba(0,0,0,0.08));
     cursor: pointer;
   }
 
@@ -196,7 +196,7 @@ const STYLES = `<style>
   .bar-track {
     flex: 1;
     height: 6px;
-    background: rgba(255,255,255,0.08);
+    background: var(--divider-color, rgba(0,0,0,0.12));
     border-radius: 3px;
     overflow: hidden;
   }
@@ -257,7 +257,7 @@ const STYLES = `<style>
   .chart-bar {
     flex: 1;
     border-radius: 2px 2px 0 0;
-    background: rgba(255,255,255,0.08);
+    background: var(--divider-color, rgba(0,0,0,0.12));
     min-height: 4px;
   }
 
@@ -349,7 +349,7 @@ const DETAIL_STYLES = `<style>
   .page {
     padding: 24px;
     min-height: 100vh;
-    background: transparent;
+    background: var(--primary-background-color, transparent);
     color: #e8eaf6;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
