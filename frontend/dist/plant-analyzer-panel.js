@@ -5,7 +5,7 @@ const STYLES = `<style>
     padding: 20px 24px;
     min-height: 100vh;
     background: transparent;
-    color: var(--primary-text-color, #e8eaf6);
+    color: var(--primary-text-color, #212121);
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     display: flex;
     flex-direction: column;
@@ -34,12 +34,12 @@ const STYLES = `<style>
   .header-title {
     font-size: 22px;
     font-weight: 700;
-    color: var(--primary-text-color, #e8eaf6);
+    color: var(--primary-text-color, #212121);
   }
 
   .header-date {
     font-size: 13px;
-    color: var(--secondary-text-color, #7a8aaa);
+    color: var(--secondary-text-color, #727272);
     margin-top: 2px;
   }
 
@@ -75,11 +75,24 @@ const STYLES = `<style>
   .plant-list-card,
   .greenhouse-card,
   .bottom-card {
-    background: var(--ha-card-background, var(--card-background-color, rgba(30,32,48,0.85)));
+    background: var(--ha-card-background, var(--card-background-color, #fff));
     border-radius: var(--ha-card-border-radius, 14px);
-    border: 1px solid var(--ha-card-border-color, var(--divider-color, rgba(255,255,255,0.06)));
-    box-shadow: var(--ha-card-box-shadow, 0 2px 8px rgba(0,0,0,0.15));
+    border: 1px solid var(--divider-color, rgba(0,0,0,0.12));
+    box-shadow: var(--ha-card-box-shadow, 0 2px 8px rgba(0,0,0,0.1));
     padding: 20px;
+  }
+
+  /* ---- Galaxy: dark glassmorphism cards ---- */
+
+  [data-galaxy] .metric-card,
+  [data-galaxy] .plant-list-card,
+  [data-galaxy] .greenhouse-card,
+  [data-galaxy] .bottom-card {
+    background: rgba(30,32,48,0.75);
+    border: 1px solid rgba(255,255,255,0.06);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
   }
 
   /* ---- Section label ---- */
@@ -88,7 +101,7 @@ const STYLES = `<style>
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.08em;
-    color: var(--secondary-text-color, #7a8aaa);
+    color: var(--secondary-text-color, #727272);
     text-transform: uppercase;
     margin-bottom: 14px;
   }
@@ -110,7 +123,7 @@ const STYLES = `<style>
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.08em;
-    color: var(--secondary-text-color, #7a8aaa);
+    color: var(--secondary-text-color, #727272);
     text-transform: uppercase;
     margin-bottom: 10px;
   }
@@ -126,7 +139,7 @@ const STYLES = `<style>
   .metric-value {
     font-size: 42px;
     font-weight: 700;
-    color: var(--primary-text-color, #e8eaf6);
+    color: var(--primary-text-color, #212121);
     line-height: 1;
     margin-bottom: 10px;
   }
@@ -134,7 +147,7 @@ const STYLES = `<style>
   .metric-value .unit {
     font-size: 20px;
     font-weight: 400;
-    color: var(--secondary-text-color, #7a8aaa);
+    color: var(--secondary-text-color, #727272);
   }
 
   .metric-status {
@@ -142,7 +155,7 @@ const STYLES = `<style>
     align-items: center;
     gap: 6px;
     font-size: 13px;
-    color: var(--secondary-text-color, #7a8aaa);
+    color: var(--secondary-text-color, #727272);
   }
 
   /* ---- Main row ---- */
@@ -175,14 +188,14 @@ const STYLES = `<style>
   .plant-row-name {
     font-size: 15px;
     font-weight: 600;
-    color: var(--primary-text-color, #e8eaf6);
+    color: var(--primary-text-color, #212121);
     margin-bottom: 2px;
     transition: color 0.15s;
   }
 
   .plant-row-species {
     font-size: 12px;
-    color: var(--secondary-text-color, #7a8aaa);
+    color: var(--secondary-text-color, #727272);
     font-style: italic;
   }
 
@@ -199,6 +212,10 @@ const STYLES = `<style>
     background: var(--divider-color, rgba(0,0,0,0.12));
     border-radius: 3px;
     overflow: hidden;
+  }
+
+  [data-galaxy] .bar-track {
+    background: rgba(255,255,255,0.08);
   }
 
   .bar-fill {
@@ -233,7 +250,7 @@ const STYLES = `<style>
 
   .gh-label {
     font-size: 11px;
-    color: var(--secondary-text-color, #7a8aaa);
+    color: var(--secondary-text-color, #727272);
     text-transform: uppercase;
     letter-spacing: 0.06em;
     margin-bottom: 3px;
@@ -242,7 +259,7 @@ const STYLES = `<style>
   .gh-value {
     font-size: 22px;
     font-weight: 700;
-    color: var(--primary-text-color, #e8eaf6);
+    color: var(--primary-text-color, #212121);
   }
 
   /* ---- Light chart ---- */
@@ -259,6 +276,10 @@ const STYLES = `<style>
     border-radius: 2px 2px 0 0;
     background: var(--divider-color, rgba(0,0,0,0.12));
     min-height: 4px;
+  }
+
+  [data-galaxy] .chart-bar {
+    background: rgba(255,255,255,0.08);
   }
 
   .chart-bar.active { background: var(--primary-color, #0b9e9e); opacity: 0.8; }
@@ -280,7 +301,7 @@ const STYLES = `<style>
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.08em;
-    color: var(--secondary-text-color, #7a8aaa);
+    color: var(--secondary-text-color, #727272);
     text-transform: uppercase;
     margin-bottom: 10px;
   }
@@ -296,7 +317,7 @@ const STYLES = `<style>
   .bottom-value {
     font-size: 36px;
     font-weight: 700;
-    color: var(--primary-text-color, #e8eaf6);
+    color: var(--primary-text-color, #212121);
     line-height: 1.2;
     margin-bottom: 10px;
   }
@@ -304,7 +325,7 @@ const STYLES = `<style>
   .bottom-value .unit {
     font-size: 18px;
     font-weight: 400;
-    color: var(--secondary-text-color, #7a8aaa);
+    color: var(--secondary-text-color, #727272);
   }
 
   .bottom-status {
@@ -312,7 +333,7 @@ const STYLES = `<style>
     align-items: center;
     gap: 6px;
     font-size: 13px;
-    color: var(--secondary-text-color, #7a8aaa);
+    color: var(--secondary-text-color, #727272);
   }
 
   /* ---- Status dot ---- */
@@ -350,14 +371,14 @@ const DETAIL_STYLES = `<style>
     padding: 24px;
     min-height: 100vh;
     background: transparent;
-    color: #e8eaf6;
+    color: var(--primary-text-color, #212121);
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
 
   .back-btn {
     background: none;
     border: none;
-    color: var(--secondary-text-color, #7a8aaa);
+    color: var(--secondary-text-color, #727272);
     font-size: 16px;
     cursor: pointer;
     padding: 0;
@@ -375,13 +396,26 @@ const DETAIL_STYLES = `<style>
     max-width: 1100px;
   }
 
-  .image-card {
-    background: var(--ha-card-background, var(--card-background-color, rgba(30,32,48,0.85)));
+  .image-card,
+  .card,
+  .text-card {
+    background: var(--ha-card-background, var(--card-background-color, #fff));
     border-radius: var(--ha-card-border-radius, 14px);
-    overflow: hidden;
-    border: 1px solid var(--ha-card-border-color, var(--divider-color, rgba(255,255,255,0.06)));
-    box-shadow: var(--ha-card-box-shadow, 0 2px 8px rgba(0,0,0,0.15));
+    border: 1px solid var(--divider-color, rgba(0,0,0,0.12));
+    box-shadow: var(--ha-card-box-shadow, 0 2px 8px rgba(0,0,0,0.1));
   }
+
+  [data-galaxy] .image-card,
+  [data-galaxy] .card,
+  [data-galaxy] .text-card {
+    background: rgba(30,32,48,0.75);
+    border: 1px solid rgba(255,255,255,0.06);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+  }
+
+  .image-card { overflow: hidden; }
 
   .plant-image {
     width: 100%;
@@ -397,11 +431,11 @@ const DETAIL_STYLES = `<style>
     font-size: 28px;
     font-weight: 700;
     margin-bottom: 8px;
-    color: var(--primary-text-color, #e8eaf6);
+    color: var(--primary-text-color, #212121);
   }
 
   .plant-species {
-    color: var(--secondary-text-color, #7a8aaa);
+    color: var(--secondary-text-color, #727272);
     font-size: 16px;
   }
 
@@ -412,15 +446,11 @@ const DETAIL_STYLES = `<style>
   }
 
   .card {
-    background: var(--ha-card-background, var(--card-background-color, rgba(30,32,48,0.85)));
-    border-radius: var(--ha-card-border-radius, 14px);
     padding: 20px;
-    border: 1px solid var(--ha-card-border-color, var(--divider-color, rgba(255,255,255,0.06)));
-    box-shadow: var(--ha-card-box-shadow, 0 2px 8px rgba(0,0,0,0.15));
   }
 
   .label {
-    color: var(--secondary-text-color, #7a8aaa);
+    color: var(--secondary-text-color, #727272);
     font-size: 14px;
     margin-bottom: 8px;
   }
@@ -428,22 +458,18 @@ const DETAIL_STYLES = `<style>
   .value {
     font-size: 24px;
     font-weight: 700;
-    color: var(--primary-text-color, #e8eaf6);
+    color: var(--primary-text-color, #212121);
   }
 
   .text-card {
     margin-top: 16px;
     padding: 20px;
-    border-radius: var(--ha-card-border-radius, 14px);
-    background: var(--ha-card-background, var(--card-background-color, rgba(30,32,48,0.85)));
-    border: 1px solid var(--ha-card-border-color, var(--divider-color, rgba(255,255,255,0.06)));
-    box-shadow: var(--ha-card-box-shadow, 0 2px 8px rgba(0,0,0,0.15));
   }
 
   .text {
     font-size: 18px;
     line-height: 1.5;
-    color: var(--primary-text-color, #e8eaf6);
+    color: var(--primary-text-color, #212121);
   }
 
   .recommendation {
@@ -903,7 +929,10 @@ class PlantAnalyzerPanel extends HTMLElement {
     this._update();
   }
   set hass(hass) {
+    var _a;
     this._hass = hass;
+    const theme = ((_a = hass.themes) == null ? void 0 : _a.theme) ?? "";
+    this.toggleAttribute("data-galaxy", theme.toLowerCase().includes("galaxy"));
     this._update();
   }
   connectedCallback() {

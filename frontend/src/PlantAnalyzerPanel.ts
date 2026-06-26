@@ -19,6 +19,8 @@ export class PlantAnalyzerPanel extends HTMLElement {
 
   set hass(hass: Hass) {
     this._hass = hass;
+    const theme = hass.themes?.theme ?? '';
+    this.toggleAttribute('data-galaxy', theme.toLowerCase().includes('galaxy'));
     this._update();
   }
 

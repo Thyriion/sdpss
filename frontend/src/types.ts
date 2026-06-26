@@ -6,6 +6,7 @@ export interface HassEntity {
 
 export interface Hass {
   states: Record<string, HassEntity>;
+  themes?: { theme?: string };
 }
 
 export interface PlantProblem {
