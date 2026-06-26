@@ -4,7 +4,7 @@ export const STYLES = `<style>
   .dashboard {
     padding: 20px 24px;
     min-height: 100vh;
-    background: transparent;
+    background: var(--primary-background-color, #fafafa);
     color: var(--primary-text-color, #212121);
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     display: flex;
@@ -82,12 +82,16 @@ export const STYLES = `<style>
     padding: 20px;
   }
 
-  /* ---- Galaxy: dark glassmorphism cards ---- */
+  /* ---- Galaxy overrides ---- */
 
-  [data-galaxy] .metric-card,
-  [data-galaxy] .plant-list-card,
-  [data-galaxy] .greenhouse-card,
-  [data-galaxy] .bottom-card {
+  .galaxy {
+    background: transparent;
+  }
+
+  .galaxy .metric-card,
+  .galaxy .plant-list-card,
+  .galaxy .greenhouse-card,
+  .galaxy .bottom-card {
     background: rgba(30,32,48,0.75);
     border: 1px solid rgba(255,255,255,0.06);
     backdrop-filter: blur(8px);
@@ -214,7 +218,7 @@ export const STYLES = `<style>
     overflow: hidden;
   }
 
-  [data-galaxy] .bar-track {
+  .galaxy .bar-track {
     background: rgba(255,255,255,0.08);
   }
 
@@ -278,7 +282,7 @@ export const STYLES = `<style>
     min-height: 4px;
   }
 
-  [data-galaxy] .chart-bar {
+  .galaxy .chart-bar {
     background: rgba(255,255,255,0.08);
   }
 
@@ -371,7 +375,7 @@ export const DETAIL_STYLES = `<style>
   .page {
     padding: 24px;
     min-height: 100vh;
-    background: transparent;
+    background: var(--primary-background-color, #fafafa);
     color: var(--primary-text-color, #212121);
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
@@ -406,9 +410,13 @@ export const DETAIL_STYLES = `<style>
     box-shadow: var(--ha-card-box-shadow, 0 2px 8px rgba(0,0,0,0.1));
   }
 
-  [data-galaxy] .image-card,
-  [data-galaxy] .card,
-  [data-galaxy] .text-card {
+  .galaxy {
+    background: transparent;
+  }
+
+  .galaxy .image-card,
+  .galaxy .card,
+  .galaxy .text-card {
     background: rgba(30,32,48,0.75);
     border: 1px solid rgba(255,255,255,0.06);
     backdrop-filter: blur(8px);

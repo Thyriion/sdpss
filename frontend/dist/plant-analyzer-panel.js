@@ -4,7 +4,7 @@ const STYLES = `<style>
   .dashboard {
     padding: 20px 24px;
     min-height: 100vh;
-    background: transparent;
+    background: var(--primary-background-color, #fafafa);
     color: var(--primary-text-color, #212121);
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     display: flex;
@@ -82,12 +82,16 @@ const STYLES = `<style>
     padding: 20px;
   }
 
-  /* ---- Galaxy: dark glassmorphism cards ---- */
+  /* ---- Galaxy overrides ---- */
 
-  [data-galaxy] .metric-card,
-  [data-galaxy] .plant-list-card,
-  [data-galaxy] .greenhouse-card,
-  [data-galaxy] .bottom-card {
+  .galaxy {
+    background: transparent;
+  }
+
+  .galaxy .metric-card,
+  .galaxy .plant-list-card,
+  .galaxy .greenhouse-card,
+  .galaxy .bottom-card {
     background: rgba(30,32,48,0.75);
     border: 1px solid rgba(255,255,255,0.06);
     backdrop-filter: blur(8px);
@@ -214,7 +218,7 @@ const STYLES = `<style>
     overflow: hidden;
   }
 
-  [data-galaxy] .bar-track {
+  .galaxy .bar-track {
     background: rgba(255,255,255,0.08);
   }
 
@@ -278,7 +282,7 @@ const STYLES = `<style>
     min-height: 4px;
   }
 
-  [data-galaxy] .chart-bar {
+  .galaxy .chart-bar {
     background: rgba(255,255,255,0.08);
   }
 
@@ -370,7 +374,7 @@ const DETAIL_STYLES = `<style>
   .page {
     padding: 24px;
     min-height: 100vh;
-    background: transparent;
+    background: var(--primary-background-color, #fafafa);
     color: var(--primary-text-color, #212121);
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
@@ -405,9 +409,13 @@ const DETAIL_STYLES = `<style>
     box-shadow: var(--ha-card-box-shadow, 0 2px 8px rgba(0,0,0,0.1));
   }
 
-  [data-galaxy] .image-card,
-  [data-galaxy] .card,
-  [data-galaxy] .text-card {
+  .galaxy {
+    background: transparent;
+  }
+
+  .galaxy .image-card,
+  .galaxy .card,
+  .galaxy .text-card {
     background: rgba(30,32,48,0.75);
     border: 1px solid rgba(255,255,255,0.06);
     backdrop-filter: blur(8px);
@@ -929,11 +937,19 @@ class PlantAnalyzerPanel extends HTMLElement {
     this._update();
   }
   set hass(hass) {
-    var _a;
     this._hass = hass;
-    const theme = ((_a = hass.themes) == null ? void 0 : _a.theme) ?? "";
-    this.toggleAttribute("data-galaxy", theme.toLowerCase().includes("galaxy"));
     this._update();
+  }
+  _isGalaxy() {
+    var _a, _b;
+    const theme = ((_b = (_a = this._hass) == null ? void 0 : _a.themes) == null ? void 0 : _b.theme) ?? "";
+    return theme.toLowerCase().includes("galaxy");
+  }
+  _applyGalaxy() {
+    var _a, _b;
+    const galaxy = this._isGalaxy();
+    (_a = this.querySelector(".dashboard")) == null ? void 0 : _a.classList.toggle("galaxy", galaxy);
+    (_b = this.querySelector(".page")) == null ? void 0 : _b.classList.toggle("galaxy", galaxy);
   }
   connectedCallback() {
     this._renderedView = null;
@@ -978,6 +994,7 @@ class PlantAnalyzerPanel extends HTMLElement {
   _updateGrid() {
     if (!this._hass) return;
     updateDashboard(this, this._getPlants(), this._hass.states, this._entities, this._tankMaxL);
+    this._applyGalaxy();
   }
   _buildDetail() {
     var _a, _b;
@@ -999,6 +1016,7 @@ class PlantAnalyzerPanel extends HTMLElement {
     const plant = (_a = this._hass) == null ? void 0 : _a.states[this._selectedPlantId];
     if (!plant) return;
     updateDetail(this, plant, this._hass.states);
+    this._applyGalaxy();
   }
 }
 customElements.define("plant-analyzer-panel", PlantAnalyzerPanel);

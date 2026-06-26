@@ -19,9 +19,18 @@ export class PlantAnalyzerPanel extends HTMLElement {
 
   set hass(hass: Hass) {
     this._hass = hass;
-    const theme = hass.themes?.theme ?? '';
-    this.toggleAttribute('data-galaxy', theme.toLowerCase().includes('galaxy'));
     this._update();
+  }
+
+  private _isGalaxy(): boolean {
+    const theme = this._hass?.themes?.theme ?? '';
+    return theme.toLowerCase().includes('galaxy');
+  }
+
+  private _applyGalaxy(): void {
+    const galaxy = this._isGalaxy();
+    this.querySelector('.dashboard')?.classList.toggle('galaxy', galaxy);
+    this.querySelector('.page')?.classList.toggle('galaxy', galaxy);
   }
 
   connectedCallback(): void {
@@ -77,6 +86,7 @@ export class PlantAnalyzerPanel extends HTMLElement {
   private _updateGrid(): void {
     if (!this._hass) return;
     updateDashboard(this, this._getPlants(), this._hass.states, this._entities, this._tankMaxL);
+    this._applyGalaxy();
   }
 
   private _buildDetail(): void {
@@ -100,5 +110,6 @@ export class PlantAnalyzerPanel extends HTMLElement {
     const plant = this._hass?.states[this._selectedPlantId!];
     if (!plant) return;
     updateDetail(this, plant, this._hass!.states);
+    this._applyGalaxy();
   }
 }
