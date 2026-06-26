@@ -23,14 +23,19 @@ export class PlantAnalyzerPanel extends HTMLElement {
   }
 
   private _isGalaxy(): boolean {
-    const theme = this._hass?.themes?.theme ?? '';
-    return theme.toLowerCase().includes('galaxy');
+    const theme = (this._hass as any)?.themes?.theme ?? '';
+    return typeof theme === 'string' && theme.toLowerCase().includes('galaxy');
   }
 
   private _applyGalaxy(): void {
     const galaxy = this._isGalaxy();
-    this.querySelector('.dashboard')?.classList.toggle('galaxy', galaxy);
-    this.querySelector('.page')?.classList.toggle('galaxy', galaxy);
+    for (const sel of ['.dashboard', '.page']) {
+      const el = this.querySelector<HTMLElement>(sel);
+      if (!el) continue;
+      el.classList.toggle('galaxy', galaxy);
+      // Set directly so no CSS variable from Galaxy theme can override this
+      el.style.backgroundColor = galaxy ? 'transparent' : '';
+    }
   }
 
   connectedCallback(): void {

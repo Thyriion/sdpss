@@ -1,10 +1,10 @@
 const STYLES = `<style>
-  * { box-sizing: border-box; }
+  plant-analyzer-panel * { box-sizing: border-box; }
 
-  .dashboard {
+  plant-analyzer-panel .dashboard {
     padding: 20px 24px;
     min-height: 100vh;
-    background: var(--primary-background-color, #fafafa);
+    background-color: var(--secondary-background-color, #f0f0f0);
     color: var(--primary-text-color, #212121);
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     display: flex;
@@ -14,56 +14,56 @@ const STYLES = `<style>
 
   /* ---- Header ---- */
 
-  .dashboard-header {
+  plant-analyzer-panel .dashboard-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
 
-  .header-left {
+  plant-analyzer-panel .header-left {
     display: flex;
     align-items: center;
     gap: 12px;
   }
 
-  .header-star {
+  plant-analyzer-panel .header-star {
     color: var(--primary-color, #0b9e9e);
     font-size: 22px;
   }
 
-  .header-title {
+  plant-analyzer-panel .header-title {
     font-size: 22px;
     font-weight: 700;
     color: var(--primary-text-color, #212121);
   }
 
-  .header-date {
+  plant-analyzer-panel .header-date {
     font-size: 13px;
     color: var(--secondary-text-color, #727272);
     margin-top: 2px;
   }
 
-  .header-badges {
+  plant-analyzer-panel .header-badges {
     display: flex;
     gap: 8px;
   }
 
-  .badge {
+  plant-analyzer-panel .badge {
     padding: 4px 14px;
     border-radius: 20px;
     font-size: 13px;
     font-weight: 600;
   }
 
-  .badge-ok {
+  plant-analyzer-panel .badge-ok {
     background: color-mix(in srgb, var(--primary-color, #0b9e9e) 15%, transparent);
     color: var(--primary-color, #0b9e9e);
     border: 1px solid color-mix(in srgb, var(--primary-color, #0b9e9e) 30%, transparent);
   }
 
-  .badge-ok::before { content: '● '; }
+  plant-analyzer-panel .badge-ok::before { content: '● '; }
 
-  .badge-warn {
+  plant-analyzer-panel .badge-warn {
     background: color-mix(in srgb, var(--warning-color, #c8843a) 12%, transparent);
     color: var(--warning-color, #c8843a);
     border: 1px solid color-mix(in srgb, var(--warning-color, #c8843a) 25%, transparent);
@@ -71,10 +71,10 @@ const STYLES = `<style>
 
   /* ---- Card base ---- */
 
-  .metric-card,
-  .plant-list-card,
-  .greenhouse-card,
-  .bottom-card {
+  plant-analyzer-panel .metric-card,
+  plant-analyzer-panel .plant-list-card,
+  plant-analyzer-panel .greenhouse-card,
+  plant-analyzer-panel .bottom-card {
     background: var(--ha-card-background, var(--card-background-color, #fff));
     border-radius: var(--ha-card-border-radius, 14px);
     border: 1px solid var(--divider-color, rgba(0,0,0,0.12));
@@ -84,14 +84,14 @@ const STYLES = `<style>
 
   /* ---- Galaxy overrides ---- */
 
-  .galaxy {
-    background: transparent;
+  plant-analyzer-panel .galaxy {
+    background-color: transparent;
   }
 
-  .galaxy .metric-card,
-  .galaxy .plant-list-card,
-  .galaxy .greenhouse-card,
-  .galaxy .bottom-card {
+  plant-analyzer-panel .galaxy .metric-card,
+  plant-analyzer-panel .galaxy .plant-list-card,
+  plant-analyzer-panel .galaxy .greenhouse-card,
+  plant-analyzer-panel .galaxy .bottom-card {
     background: rgba(30,32,48,0.75);
     border: 1px solid rgba(255,255,255,0.06);
     backdrop-filter: blur(8px);
@@ -101,7 +101,7 @@ const STYLES = `<style>
 
   /* ---- Section label ---- */
 
-  .section-label {
+  plant-analyzer-panel .section-label {
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.08em;
@@ -112,18 +112,18 @@ const STYLES = `<style>
 
   /* ---- Metrics row ---- */
 
-  .metrics-row {
+  plant-analyzer-panel .metrics-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
   }
 
-  .metric-card {
+  plant-analyzer-panel .metric-card {
     position: relative;
     overflow: hidden;
   }
 
-  .metric-label {
+  plant-analyzer-panel .metric-label {
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.08em;
@@ -132,7 +132,7 @@ const STYLES = `<style>
     margin-bottom: 10px;
   }
 
-  .metric-icon {
+  plant-analyzer-panel .metric-icon {
     position: absolute;
     top: 18px;
     right: 18px;
@@ -140,7 +140,7 @@ const STYLES = `<style>
     opacity: 0.3;
   }
 
-  .metric-value {
+  plant-analyzer-panel .metric-value {
     font-size: 42px;
     font-weight: 700;
     color: var(--primary-text-color, #212121);
@@ -148,13 +148,13 @@ const STYLES = `<style>
     margin-bottom: 10px;
   }
 
-  .metric-value .unit {
+  plant-analyzer-panel .metric-value .unit {
     font-size: 20px;
     font-weight: 400;
     color: var(--secondary-text-color, #727272);
   }
 
-  .metric-status {
+  plant-analyzer-panel .metric-status {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -164,7 +164,7 @@ const STYLES = `<style>
 
   /* ---- Main row ---- */
 
-  .main-row {
+  plant-analyzer-panel .main-row {
     display: grid;
     grid-template-columns: 1fr 300px;
     gap: 16px;
@@ -172,7 +172,7 @@ const STYLES = `<style>
 
   /* ---- Plant list ---- */
 
-  .plant-row {
+  plant-analyzer-panel .plant-row {
     display: flex;
     align-items: center;
     gap: 16px;
@@ -181,15 +181,17 @@ const STYLES = `<style>
     cursor: pointer;
   }
 
-  .plant-row:last-child { border-bottom: none; }
+  plant-analyzer-panel .plant-row:last-child { border-bottom: none; }
 
-  .plant-row:hover .plant-row-name { color: var(--primary-color, #0b9e9e); }
+  plant-analyzer-panel .plant-row:hover .plant-row-name {
+    color: var(--primary-color, #0b9e9e);
+  }
 
-  .plant-row-info {
+  plant-analyzer-panel .plant-row-info {
     min-width: 200px;
   }
 
-  .plant-row-name {
+  plant-analyzer-panel .plant-row-name {
     font-size: 15px;
     font-weight: 600;
     color: var(--primary-text-color, #212121);
@@ -197,20 +199,20 @@ const STYLES = `<style>
     transition: color 0.15s;
   }
 
-  .plant-row-species {
+  plant-analyzer-panel .plant-row-species {
     font-size: 12px;
     color: var(--secondary-text-color, #727272);
     font-style: italic;
   }
 
-  .plant-row-right {
+  plant-analyzer-panel .plant-row-right {
     flex: 1;
     display: flex;
     align-items: center;
     gap: 12px;
   }
 
-  .bar-track {
+  plant-analyzer-panel .bar-track {
     flex: 1;
     height: 6px;
     background: var(--divider-color, rgba(0,0,0,0.12));
@@ -218,41 +220,41 @@ const STYLES = `<style>
     overflow: hidden;
   }
 
-  .galaxy .bar-track {
+  plant-analyzer-panel .galaxy .bar-track {
     background: rgba(255,255,255,0.08);
   }
 
-  .bar-fill {
+  plant-analyzer-panel .bar-fill {
     height: 100%;
     border-radius: 3px;
     transition: width 0.4s ease;
   }
 
-  .bar-fill.ok      { background: var(--primary-color, #0b9e9e); }
-  .bar-fill.warning { background: var(--warning-color, #c8843a); }
-  .bar-fill.problem { background: var(--error-color, #9e1d09); }
+  plant-analyzer-panel .bar-fill.ok      { background: var(--primary-color, #0b9e9e); }
+  plant-analyzer-panel .bar-fill.warning { background: var(--warning-color, #c8843a); }
+  plant-analyzer-panel .bar-fill.problem { background: var(--error-color, #9e1d09); }
 
-  .bar-value {
+  plant-analyzer-panel .bar-value {
     font-size: 14px;
     font-weight: 600;
     min-width: 40px;
     text-align: right;
   }
 
-  .bar-value.ok      { color: var(--primary-color, #0b9e9e); }
-  .bar-value.warning { color: var(--warning-color, #c8843a); }
-  .bar-value.problem { color: var(--error-color, #9e1d09); }
+  plant-analyzer-panel .bar-value.ok      { color: var(--primary-color, #0b9e9e); }
+  plant-analyzer-panel .bar-value.warning { color: var(--warning-color, #c8843a); }
+  plant-analyzer-panel .bar-value.problem { color: var(--error-color, #9e1d09); }
 
   /* ---- Greenhouse card ---- */
 
-  .greenhouse-grid {
+  plant-analyzer-panel .greenhouse-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 14px;
     margin-bottom: 4px;
   }
 
-  .gh-label {
+  plant-analyzer-panel .gh-label {
     font-size: 11px;
     color: var(--secondary-text-color, #727272);
     text-transform: uppercase;
@@ -260,7 +262,7 @@ const STYLES = `<style>
     margin-bottom: 3px;
   }
 
-  .gh-value {
+  plant-analyzer-panel .gh-value {
     font-size: 22px;
     font-weight: 700;
     color: var(--primary-text-color, #212121);
@@ -268,40 +270,43 @@ const STYLES = `<style>
 
   /* ---- Light chart ---- */
 
-  .light-chart {
+  plant-analyzer-panel .light-chart {
     display: flex;
     align-items: flex-end;
     gap: 4px;
     height: 48px;
   }
 
-  .chart-bar {
+  plant-analyzer-panel .chart-bar {
     flex: 1;
     border-radius: 2px 2px 0 0;
     background: var(--divider-color, rgba(0,0,0,0.12));
     min-height: 4px;
   }
 
-  .galaxy .chart-bar {
+  plant-analyzer-panel .galaxy .chart-bar {
     background: rgba(255,255,255,0.08);
   }
 
-  .chart-bar.active { background: var(--primary-color, #0b9e9e); opacity: 0.8; }
+  plant-analyzer-panel .chart-bar.active {
+    background: var(--primary-color, #0b9e9e);
+    opacity: 0.8;
+  }
 
   /* ---- Bottom row ---- */
 
-  .bottom-row {
+  plant-analyzer-panel .bottom-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
   }
 
-  .bottom-card {
+  plant-analyzer-panel .bottom-card {
     position: relative;
     overflow: hidden;
   }
 
-  .bottom-label {
+  plant-analyzer-panel .bottom-label {
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.08em;
@@ -310,7 +315,7 @@ const STYLES = `<style>
     margin-bottom: 10px;
   }
 
-  .bottom-icon {
+  plant-analyzer-panel .bottom-icon {
     position: absolute;
     top: 18px;
     right: 18px;
@@ -318,7 +323,7 @@ const STYLES = `<style>
     opacity: 0.25;
   }
 
-  .bottom-value {
+  plant-analyzer-panel .bottom-value {
     font-size: 36px;
     font-weight: 700;
     color: var(--primary-text-color, #212121);
@@ -326,13 +331,13 @@ const STYLES = `<style>
     margin-bottom: 10px;
   }
 
-  .bottom-value .unit {
+  plant-analyzer-panel .bottom-value .unit {
     font-size: 18px;
     font-weight: 400;
     color: var(--secondary-text-color, #727272);
   }
 
-  .bottom-status {
+  plant-analyzer-panel .bottom-status {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -342,7 +347,7 @@ const STYLES = `<style>
 
   /* ---- Status dot ---- */
 
-  .dot {
+  plant-analyzer-panel .dot {
     display: inline-block;
     width: 8px;
     height: 8px;
@@ -350,36 +355,36 @@ const STYLES = `<style>
     flex-shrink: 0;
   }
 
-  .dot.ok      { background: var(--primary-color, #0b9e9e); }
-  .dot.warning { background: var(--warning-color, #c8843a); }
-  .dot.problem { background: var(--error-color, #9e1d09); }
+  plant-analyzer-panel .dot.ok      { background: var(--primary-color, #0b9e9e); }
+  plant-analyzer-panel .dot.warning { background: var(--warning-color, #c8843a); }
+  plant-analyzer-panel .dot.problem { background: var(--error-color, #9e1d09); }
 
   /* ---- Responsive ---- */
 
   @media (max-width: 1000px) {
-    .main-row { grid-template-columns: 1fr; }
+    plant-analyzer-panel .main-row { grid-template-columns: 1fr; }
   }
 
   @media (max-width: 800px) {
-    .metrics-row { grid-template-columns: 1fr 1fr; }
-    .bottom-row  { grid-template-columns: 1fr 1fr; }
+    plant-analyzer-panel .metrics-row { grid-template-columns: 1fr 1fr; }
+    plant-analyzer-panel .bottom-row  { grid-template-columns: 1fr 1fr; }
   }
 
   @media (max-width: 500px) {
-    .metrics-row { grid-template-columns: 1fr; }
-    .bottom-row  { grid-template-columns: 1fr; }
+    plant-analyzer-panel .metrics-row { grid-template-columns: 1fr; }
+    plant-analyzer-panel .bottom-row  { grid-template-columns: 1fr; }
   }
 </style>`;
 const DETAIL_STYLES = `<style>
-  .page {
+  plant-analyzer-panel .page {
     padding: 24px;
     min-height: 100vh;
-    background: var(--primary-background-color, #fafafa);
+    background-color: var(--secondary-background-color, #f0f0f0);
     color: var(--primary-text-color, #212121);
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
 
-  .back-btn {
+  plant-analyzer-panel .back-btn {
     background: none;
     border: none;
     color: var(--secondary-text-color, #727272);
@@ -391,31 +396,27 @@ const DETAIL_STYLES = `<style>
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
 
-  .back-btn:hover { color: var(--primary-color, #0b9e9e); }
+  plant-analyzer-panel .back-btn:hover { color: var(--primary-color, #0b9e9e); }
 
-  .layout {
+  plant-analyzer-panel .layout {
     display: grid;
     grid-template-columns: minmax(260px, 360px) 1fr;
     gap: 24px;
     max-width: 1100px;
   }
 
-  .image-card,
-  .card,
-  .text-card {
+  plant-analyzer-panel .image-card,
+  plant-analyzer-panel .card,
+  plant-analyzer-panel .text-card {
     background: var(--ha-card-background, var(--card-background-color, #fff));
     border-radius: var(--ha-card-border-radius, 14px);
     border: 1px solid var(--divider-color, rgba(0,0,0,0.12));
     box-shadow: var(--ha-card-box-shadow, 0 2px 8px rgba(0,0,0,0.1));
   }
 
-  .galaxy {
-    background: transparent;
-  }
-
-  .galaxy .image-card,
-  .galaxy .card,
-  .galaxy .text-card {
+  plant-analyzer-panel .galaxy .image-card,
+  plant-analyzer-panel .galaxy .card,
+  plant-analyzer-panel .galaxy .text-card {
     background: rgba(30,32,48,0.75);
     border: 1px solid rgba(255,255,255,0.06);
     backdrop-filter: blur(8px);
@@ -423,9 +424,9 @@ const DETAIL_STYLES = `<style>
     box-shadow: 0 4px 24px rgba(0,0,0,0.5);
   }
 
-  .image-card { overflow: hidden; }
+  plant-analyzer-panel .image-card { overflow: hidden; }
 
-  .plant-image {
+  plant-analyzer-panel .plant-image {
     width: 100%;
     height: 260px;
     object-fit: cover;
@@ -433,65 +434,63 @@ const DETAIL_STYLES = `<style>
     background: var(--secondary-background-color, #f0f0f0);
   }
 
-  .plant-info { padding: 20px; }
+  plant-analyzer-panel .plant-info { padding: 20px; }
 
-  .plant-name {
+  plant-analyzer-panel .plant-name {
     font-size: 28px;
     font-weight: 700;
     margin-bottom: 8px;
     color: var(--primary-text-color, #212121);
   }
 
-  .plant-species {
+  plant-analyzer-panel .plant-species {
     color: var(--secondary-text-color, #727272);
     font-size: 16px;
   }
 
-  .sensor-grid {
+  plant-analyzer-panel .sensor-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 16px;
   }
 
-  .card {
-    padding: 20px;
-  }
+  plant-analyzer-panel .card { padding: 20px; }
 
-  .label {
+  plant-analyzer-panel .label {
     color: var(--secondary-text-color, #727272);
     font-size: 14px;
     margin-bottom: 8px;
   }
 
-  .value {
+  plant-analyzer-panel .value {
     font-size: 24px;
     font-weight: 700;
     color: var(--primary-text-color, #212121);
   }
 
-  .text-card {
+  plant-analyzer-panel .text-card {
     margin-top: 16px;
     padding: 20px;
   }
 
-  .text {
+  plant-analyzer-panel .text {
     font-size: 18px;
     line-height: 1.5;
     color: var(--primary-text-color, #212121);
   }
 
-  .recommendation {
+  plant-analyzer-panel .recommendation {
     font-size: 20px;
     line-height: 1.5;
     font-weight: 700;
   }
 
-  .ok      { color: var(--primary-color, #0b9e9e); }
-  .warning { color: var(--warning-color, #c8843a); }
-  .problem { color: var(--error-color, #9e1d09); }
+  plant-analyzer-panel .ok      { color: var(--primary-color, #0b9e9e); }
+  plant-analyzer-panel .warning { color: var(--warning-color, #c8843a); }
+  plant-analyzer-panel .problem { color: var(--error-color, #9e1d09); }
 
   @media (max-width: 800px) {
-    .layout { grid-template-columns: 1fr; }
+    plant-analyzer-panel .layout { grid-template-columns: 1fr; }
   }
 </style>`;
 const STATUS_MAP = {
@@ -943,13 +942,16 @@ class PlantAnalyzerPanel extends HTMLElement {
   _isGalaxy() {
     var _a, _b;
     const theme = ((_b = (_a = this._hass) == null ? void 0 : _a.themes) == null ? void 0 : _b.theme) ?? "";
-    return theme.toLowerCase().includes("galaxy");
+    return typeof theme === "string" && theme.toLowerCase().includes("galaxy");
   }
   _applyGalaxy() {
-    var _a, _b;
     const galaxy = this._isGalaxy();
-    (_a = this.querySelector(".dashboard")) == null ? void 0 : _a.classList.toggle("galaxy", galaxy);
-    (_b = this.querySelector(".page")) == null ? void 0 : _b.classList.toggle("galaxy", galaxy);
+    for (const sel of [".dashboard", ".page"]) {
+      const el = this.querySelector(sel);
+      if (!el) continue;
+      el.classList.toggle("galaxy", galaxy);
+      el.style.backgroundColor = galaxy ? "transparent" : "";
+    }
   }
   connectedCallback() {
     this._renderedView = null;
