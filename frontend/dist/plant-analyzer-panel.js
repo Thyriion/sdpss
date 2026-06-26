@@ -4,7 +4,7 @@ const STYLES = `<style>
   .dashboard {
     padding: 20px 24px;
     min-height: 100vh;
-    background: var(--primary-background-color, transparent);
+    background: transparent;
     color: var(--primary-text-color, #e8eaf6);
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     display: flex;
@@ -349,7 +349,7 @@ const DETAIL_STYLES = `<style>
   .page {
     padding: 24px;
     min-height: 100vh;
-    background: var(--primary-background-color, transparent);
+    background: transparent;
     color: #e8eaf6;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
