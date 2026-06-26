@@ -75,12 +75,10 @@ export const STYLES = `<style>
   .plant-list-card,
   .greenhouse-card,
   .bottom-card {
-    background: rgba(30, 32, 48, 0.75);
-    border-radius: 14px;
-    border: 1px solid rgba(255,255,255,0.06);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+    background: var(--ha-card-background, var(--card-background-color, #fff));
+    border-radius: var(--ha-card-border-radius, 14px);
+    border: 1px solid var(--ha-card-border-color, var(--divider-color, rgba(255,255,255,0.06)));
+    box-shadow: var(--ha-card-box-shadow, 0 2px 8px rgba(0,0,0,0.15));
     padding: 20px;
   }
 
@@ -379,13 +377,11 @@ export const DETAIL_STYLES = `<style>
   }
 
   .image-card {
-    background: rgba(30, 32, 48, 0.75);
-    border-radius: 14px;
+    background: var(--ha-card-background, var(--card-background-color, #fff));
+    border-radius: var(--ha-card-border-radius, 14px);
     overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.06);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+    border: 1px solid var(--ha-card-border-color, var(--divider-color, rgba(255,255,255,0.06)));
+    box-shadow: var(--ha-card-box-shadow, 0 2px 8px rgba(0,0,0,0.15));
   }
 
   .plant-image {
@@ -393,7 +389,7 @@ export const DETAIL_STYLES = `<style>
     height: 260px;
     object-fit: cover;
     display: block;
-    background: #1e2030;
+    background: var(--secondary-background-color, #f0f0f0);
   }
 
   .plant-info { padding: 20px; }
@@ -417,13 +413,11 @@ export const DETAIL_STYLES = `<style>
   }
 
   .card {
-    background: rgba(30, 32, 48, 0.75);
-    border-radius: 14px;
+    background: var(--ha-card-background, var(--card-background-color, #fff));
+    border-radius: var(--ha-card-border-radius, 14px);
     padding: 20px;
-    border: 1px solid rgba(255,255,255,0.06);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+    border: 1px solid var(--ha-card-border-color, var(--divider-color, rgba(255,255,255,0.06)));
+    box-shadow: var(--ha-card-box-shadow, 0 2px 8px rgba(0,0,0,0.15));
   }
 
   .label {
@@ -441,12 +435,10 @@ export const DETAIL_STYLES = `<style>
   .text-card {
     margin-top: 16px;
     padding: 20px;
-    border-radius: 14px;
-    background: rgba(30, 32, 48, 0.75);
-    border: 1px solid rgba(255,255,255,0.06);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+    border-radius: var(--ha-card-border-radius, 14px);
+    background: var(--ha-card-background, var(--card-background-color, #fff));
+    border: 1px solid var(--ha-card-border-color, var(--divider-color, rgba(255,255,255,0.06)));
+    box-shadow: var(--ha-card-box-shadow, 0 2px 8px rgba(0,0,0,0.15));
   }
 
   .text {
